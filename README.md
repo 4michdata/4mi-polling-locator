@@ -62,10 +62,41 @@ lookup rather than asserting a polling place it cannot corroborate twice.
 `build/precinct_disagreements.csv` is the working list for whoever owns the
 turf record.
 
+## Early voting
+
+Michigan early voting sites are chosen by each city or township clerk, are
+usually not the Election Day polling place, and the state publishes no bulk
+list of them. The only official lookup is MVIC, which refuses automation. So
+the page carries its own table, `data/early-voting.json`, keyed by precinct id
+and built from the program's clerk confirmed crosswalk sheet
+(`4MI_Turf_Precinct_Crosswalk_Validation_Draft2`, EV tab).
+
+    python3 build/build_early.py build/ev_tab.json data/dorms.json data/early-voting.json build/ev_overrides.json
+
+Rules the build enforces, and the page and tests re-enforce:
+
+- only rows with Clerk Confirmed = Yes are read; everything else is ignored
+- a precinct is written only when every site name pairs with an address;
+  anything the script cannot pair goes to `_held` with the reason
+- two confirmed rows for the same precinct that disagree are held, not merged
+- multi site cities (Ann Arbor, East Lansing, Kalamazoo, Detroit, Grand Rapids,
+  Midland) were typed free form in the sheet, so `build/ev_overrides.json`
+  carries them hand read, and wins over the parser for those jurisdictions
+- the page will not render a site without a `confirmed` date, and sorts
+  on campus sites (`campus: true`) first
+
+Coverage as built: 118 precincts live, 644 of 736 buildings, 1 held (East
+Lansing 9, two confirmed rows disagree), 30 precincts with no row in the sheet
+yet. `_no_row_in_sheet` in the file is the list for the next clerk round; a
+student in one of those precincts sees the window and the state lookup only.
+
+`build/ev_tab.json` is the sheet extract with the working notes column
+removed. Refresh it from the sheet, rerun the build, rerun the tests.
+
 ## Rebuilding the data
 
     npm run data     # build, fill municipalities, validate
-    npm test         # 45 checks, no network needed
+    npm test         # 105 checks, no network needed
 
 `build/build_data.py` joins the upstream file to the turf tracker.
 `build/fill_city.py` reverse geocodes the buildings whose municipality the turf
@@ -118,8 +149,10 @@ for this audience.
 
     index.html                        the page
     app.js                            all behaviour
-    styles.css                        field suite dark glass
+    styles.css                        4mich.org brand tokens
     data/dorms.json                   campuses, buildings, precincts, polls
     data/precincts-geo.json           149 polygons, lazy loaded for typed addresses
-    build/                            the data pipeline and its cache
-    tests/smoke.mjs                   45 checks including house style and privacy
+    data/guide.json                   student voting guide copy and the four dates
+    data/early-voting.json            clerk confirmed early voting sites by precinct
+    build/                            the data pipeline, the early voting build and caches
+    tests/smoke.mjs                   105 checks including house style and privacy

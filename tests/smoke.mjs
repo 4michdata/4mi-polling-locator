@@ -44,7 +44,7 @@ ok('no name or birth fields in the public file',
 
 /* -------------------------------------------------------- 2 house style */
 console.log('\nhouse style');
-const sources = ['index.html', 'app.js', 'styles.css', 'README.md', 'data/dorms.json', 'data/guide.json']
+const sources = ['index.html', 'app.js', 'styles.css', 'README.md', 'data/dorms.json', 'data/guide.json', 'data/early-voting.json']
   .filter(f => fs.existsSync(path.join(ROOT, f)))
   .map(f => [f, fs.readFileSync(path.join(ROOT, f), 'utf8')]);
 for (const [f, txt] of sources) {
@@ -66,7 +66,8 @@ const dom = new JSDOM(html.replace(/<script src="https:\/\/cdnjs[^<]*<\/script>/
 const w = dom.window;
 w.fetch = async (u) => {
   const file = String(u).includes('precincts-geo') ? 'data/precincts-geo.json'
-             : String(u).includes('guide') ? 'data/guide.json' : 'data/dorms.json';
+             : String(u).includes('guide') ? 'data/guide.json'
+             : String(u).includes('early') ? 'data/early-voting.json' : 'data/dorms.json';
   return { ok: true, json: async () => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) };
 };
 w.scrollTo = () => {};
@@ -113,20 +114,27 @@ ok('picking a home state reveals the registration question', !d.querySelector('#
 /* the guide */
 d.querySelector('[data-reg="no"]').dispatchEvent(new w.Event('click', { bubbles: true }));
 ok('answering "not yet" opens the student guide', !d.querySelector('#scene-guide').classList.contains('hide'));
-ok('guide speaks to a Michigan student', /school or at home/.test(d.querySelector('#gHomeTitle').textContent));
+ok('guide speaks to a Michigan student', /at school or vote at home/.test(d.querySelector('#gHomeTitle').textContent));
 ok('guide registration link goes to the state', d.querySelector('#gRegStart').href.includes('sos.state.mi.us'));
 ok('guide lists proof of residence including the student portal',
    d.querySelectorAll('#gProof li').length >= 5 && /student portal/i.test(d.querySelector('#gProof').textContent));
 ok('guide says student ID counts at the polls', /Student ID/.test(d.querySelector('#gId').textContent));
 ok('guide says you can still vote with no ID', /still vote/.test(d.querySelector('#gIdNone').textContent));
-ok('guide carries all nine dates', d.querySelectorAll('#gDates li').length === 9);
-ok('dates include the October 19 registration cutoff', /Oct 19/.test(d.querySelector('#gDates').textContent));
+ok('guide carries four dates and no more', d.querySelectorAll('#gDates li').length === 4);
+ok('dates are registration cutoff, early vote open and close, Election Day',
+   /Oct 19/.test(d.querySelector('#gDates').textContent) && /Oct 24/.test(d.querySelector('#gDates').textContent) &&
+   /Nov 1(?!\d)/.test(d.querySelector('#gDates').textContent) && /Nov 3/.test(d.querySelector('#gDates').textContent));
+ok('no absentee content anywhere in the guide', !/absentee|mail ballot|by mail/i.test(d.querySelector('#scene-guide').textContent));
+ok('early voting block names the window and links the state lookup',
+   /October 24 to November 1/.test(d.querySelector('#gEarlyTitle').textContent) &&
+   d.querySelector('#gEarlyCta').href.includes('early-voting'));
+ok('guide covers the no Social Security number case', /Social Security/.test(d.querySelector('#gRegNoSsn').textContent));
 ok('exactly one date is marked next', d.querySelectorAll('#gDates li.next').length === 1);
 ok('guide names its verification date', /2026-09-18/.test(d.querySelector('#gVerified').textContent));
 
 /* out of state wording differs */
 w.__locator.state.home = 'Ohio'; w.__locator.renderGuide('no');
-ok('an out of state student gets the out of state guidance', /campus address/.test(d.querySelector('#gHomeTitle').textContent) && /Out of state/.test(d.querySelector('#gHomeBody').textContent));
+ok('an out of state student gets the out of state guidance', /register here/.test(d.querySelector('#gHomeTitle').textContent) && /cancels your registration back home/.test(d.querySelector('#gHomeBody').textContent));
 w.__locator.state.home = 'Michigan';
 
 d.querySelector('[data-reg="yes"]').dispatchEvent(new w.Event('click', { bubbles: true }));
@@ -185,13 +193,58 @@ ok('directions deep link built',
 ok('street view deep link built', d.querySelector('#btnPano').href.includes('map_action=pano'));
 ok('provenance names the state layer', /State of Michigan/.test(d.querySelector('#prov').textContent));
 ok('provenance prints the precinct code', /\d{13}/.test(d.querySelector('#prov').textContent));
-ok('upcoming deadlines sit beside the polling place', d.querySelectorAll('#rDates li').length >= 3 &&
-   d.querySelectorAll('#rDates li.past').length === 0);
+ok('early voting sits beside the polling place with the state lookup',
+   /October 24/.test(d.querySelector('#evPanel').textContent) && d.querySelector('#evLookup').href.includes('mvic'));
+const evRows = d.querySelectorAll('#evSites .ev-site');
+ok('clerk confirmed early voting sites render for the precinct', evRows.length === 2, evRows.length + ' rows');
+ok('the on campus site is listed first', evRows.length && evRows[0].classList.contains('campus') && /WKAR/.test(evRows[0].textContent));
+ok('each site carries its confirmation date', [...evRows].every(r => /Confirmed 2026-\d{2}-\d{2}/.test(r.textContent)));
+ok('each site gets a walking directions link', [...evRows].every(r => (r.querySelector('a') || {}).href && /google\.com\/maps\/dir/.test(r.querySelector('a').href)));
+ok('the satellite note shows as a tip', /WKAR/.test((d.querySelector('#evSites .tip') || {}).textContent || ''));
+ok('lookup button turns into a cross check once sites are on file', /Check it on the state site/.test(d.querySelector('#evLookup').textContent));
 
 const abbot = data.dorms.find(x => x.s === 'MSU' && /^Abbot Hall/i.test(x.n));
+/* the confirm gate: a site with no confirmation date must never render */
+const ev = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/early-voting.json'), 'utf8'));
+const badEv = Object.entries(ev.precincts).filter(([k, e]) => !e || !e.sites || !e.sites.length ||
+  !/^\d{4}-\d{2}-\d{2}$/.test(e.confirmed || '') || e.sites.some(x => !x.name || !x.addr));
+ok('every early voting precinct on file has named, addressed sites and a confirmation date', badEv.length === 0, badEv.map(b => b[0]).join(', '));
+ok('early voting keys are 13 digit precinct ids known to the dorm data',
+   Object.keys(ev.precincts).every(k => /^\d{13}$/.test(k) && data.precincts[k]));
+const evCovered = data.dorms.filter(x => ev.precincts[x.p]).length;
+ok('early voting covers most student buildings', evCovered / data.dorms.length >= 0.8, evCovered + ' of ' + data.dorms.length);
+ok('held and unmatched precincts stay off the page',
+   Object.keys(ev._held).every(k => !ev.precincts[k]) && Object.keys(ev._no_row_in_sheet.precincts).every(k => !ev.precincts[k]));
+ok('early voting file carries no dashes or emoji',
+   !/[\u2013\u2014]/.test(JSON.stringify(ev)) && !/[\u{1F300}-\u{1FAFF}]/u.test(JSON.stringify(ev)));
+const evLive = w.__locator.state.early.precincts[abbot.p];
+const keep = evLive.confirmed;
+evLive.confirmed = '';
+w.__locator.renderEarly(abbot.p);
+ok('the same sites vanish the moment the confirmation is blank', d.querySelectorAll('#evSites .ev-site').length === 0);
+ok('and the button goes back to the state lookup', /Find my early voting site/.test(d.querySelector('#evLookup').textContent));
+evLive.confirmed = keep;
+w.__locator.renderEarly(abbot.p);
+ok('restored confirmation brings them back', d.querySelectorAll('#evSites .ev-site').length === 2);
+w.__locator.renderEarly('0000000000000');
+ok('a precinct with no row shows the window and the lookup only',
+   d.querySelectorAll('#evSites .ev-site').length === 0 && /October 24/.test(d.querySelector('#evTitle').textContent) &&
+   /Find my early voting site/.test(d.querySelector('#evLookup').textContent));
+w.__locator.renderEarly(abbot.p);
+ok('with sites on file the title stops quoting the statewide window and the body names it instead',
+   /Your early voting sites/.test(d.querySelector('#evTitle').textContent) && /October 24 to November 1/.test(d.querySelector('#evBody').textContent));
+w.__locator.renderEarly(abbot.p);
+
 ok('Abbot Hall resolves to precinct 0652412000010', abbot.p === '0652412000010', abbot.p);
 ok('that precinct votes at the Union building',
    /UNION/i.test(data.precincts[abbot.p].poll.name), data.precincts[abbot.p].poll.name);
+
+/* wording that matched the VoteAmerica site, per Abbie, must be gone */
+console.log('\nvoice');
+const allText = (html + fs.readFileSync(path.join(ROOT, 'data/guide.json'), 'utf8')).toLowerCase();
+for (const phrase of ['college voting guide', 'walk you through', 'get your', 'home state and school state', 'find where you vote', 'down to the door.\n']) {
+  ok('does not say "' + phrase.trim() + '"', !allText.includes(phrase));
+}
 
 /* assets referenced must exist on disk */
 console.log('\nassets');

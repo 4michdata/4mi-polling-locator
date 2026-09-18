@@ -1,0 +1,260 @@
+{
+ "_readme": "Hand read from the clerk confirmed cells for cities whose sheet rows hold several sites in one cell. Keyed by jurisdiction as the precinct name spells it. Edit here, rebuild, done.",
+ "City of Ann Arbor": {
+  "sites": [
+   {
+    "name": "University of Michigan Museum of Art (UMMA)",
+    "addr": "525 S State St, Ann Arbor, MI 48109",
+    "hours": "11 am to 7 pm",
+    "dates": "October 21 to November 1",
+    "campus": true
+   },
+   {
+    "name": "Duderstadt Center",
+    "addr": "2281 Bonisteel Blvd, Ann Arbor, MI 48109",
+    "hours": "11 am to 7 pm",
+    "dates": "October 21 to November 1",
+    "campus": true
+   },
+   {
+    "name": "Ann Arbor City Hall",
+    "addr": "301 E Huron St, Ann Arbor, MI 48104",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Traverwood Library",
+    "addr": "3333 Traverwood Dr, Ann Arbor, MI 48105",
+    "hours": "11 am to 7 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Malletts Creek Library",
+    "addr": "3090 E Eisenhower Pkwy, Ann Arbor, MI 48108",
+    "hours": "11 am to 7 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Westgate Library",
+    "addr": "2503 Jackson Ave, Ann Arbor, MI 48103",
+    "hours": "11 am to 7 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": {
+   "where": "UMMA from October 1, and the Duderstadt Center from October 21, both on campus, 11 am to 7 pm. On Election Day both are vote centers, 7 am to 8 pm.",
+   "hours": ""
+  }
+ },
+ "City of East Lansing": {
+  "sites": [
+   {
+    "name": "WKAR Studio A, Communication Arts and Sciences Building",
+    "addr": "404 Wilson Road, East Lansing, MI 48824",
+    "hours": "10 am to 6 pm, and 9 am to 4 pm on November 2",
+    "dates": "October 19 to November 2",
+    "campus": true
+   },
+   {
+    "name": "Hannah Community Center",
+    "addr": "819 Abbot Rd, East Lansing, MI 48823",
+    "hours": "9 am to 5 pm, and 9 am to 4 pm on November 2",
+    "dates": "October 24 to November 2"
+   }
+  ],
+  "satellite": {
+   "where": "WKAR Studio A on campus, October 19 to November 2, same hours as early voting.",
+   "hours": ""
+  }
+ },
+ "City of Kalamazoo": {
+  "sites": [
+   {
+    "name": "Fetzer Center at WMU",
+    "addr": "2251 Business Ct, Kalamazoo, MI 49008",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1",
+    "campus": true
+   },
+   {
+    "name": "Douglass Community Association",
+    "addr": "1000 W Paterson St, Kalamazoo, MI 49007",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Kalamazoo County Expo Center",
+    "addr": "2900 Lake St, Kalamazoo, MI 49048",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Portage Parks and Recreation Department",
+    "addr": "320 Library Ln, Portage, MI 49002",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": {
+   "where": "Fetzer Center on campus is also a clerk satellite from October 12: weekdays 9 am to 5 pm, Saturday October 31 9 am to 5 pm, Monday November 2 8 am to 4 pm, and Election Day 7 am to 8 pm.",
+   "hours": ""
+  }
+ },
+ "City of Detroit": {
+  "sites": [
+   {
+    "name": "Wayne County Community College, Eastern Campus",
+    "addr": "5901 Conner, Detroit, MI 48213",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Wayne County Community College, Northwest Campus",
+    "addr": "8200 W Outer Drive, Detroit, MI 48219",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Department of Elections",
+    "addr": "2978 W Grand Blvd, Detroit, MI 48202",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Detroit City Clerk's Office",
+    "addr": "2 Woodward Ave, Suite 106, Detroit, MI 48226",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Adam Butzel Recreation Center",
+    "addr": "10500 Lyndon, Detroit, MI 48235",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Clark Park",
+    "addr": "1130 Clark Ave, Detroit, MI 48209",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Farwell Recreation Center",
+    "addr": "2711 E Outer Drive, Detroit, MI 48234",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Northwest Activities Center",
+    "addr": "18100 Meyers Rd, Detroit, MI 48235",
+    "hours": "9 am to 5 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Midland": {
+  "sites": [
+   {
+    "name": "Greater Midland Community Center",
+    "addr": "2205 Jefferson Ave, Midland, MI 48640",
+    "hours": "9 am to 5 pm, and 11 am to 7 pm on October 28 and 29",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Coleman City Hall",
+    "addr": "201 E Railway St, Coleman, MI 48618",
+    "hours": "9 am to 5 pm, and 11 am to 7 pm on October 28 and 29",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Grand Rapids": {
+  "sites": [
+   {
+    "name": "St. Peter and Paul School",
+    "addr": "1430 Quarry Ave NW, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "GRPS University",
+    "addr": "1400 Fuller Ave NE, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "Ottawa Hills High School",
+    "addr": "2055 Rosewood Ave SE, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "New Hope Baptist Church",
+    "addr": "130 Delaware St SW, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Walker": {
+  "sites": [
+   {
+    "name": "St. Peter and Paul School",
+    "addr": "1430 Quarry Ave NW, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "GRPS University",
+    "addr": "1400 Fuller Ave NE, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "Ottawa Hills High School",
+    "addr": "2055 Rosewood Ave SE, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "New Hope Baptist Church",
+    "addr": "130 Delaware St SW, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of East Grand Rapids": {
+  "sites": [
+   {
+    "name": "St. Peter and Paul School",
+    "addr": "1430 Quarry Ave NW, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "GRPS University",
+    "addr": "1400 Fuller Ave NE, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "Ottawa Hills High School",
+    "addr": "2055 Rosewood Ave SE, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   },
+   {
+    "name": "New Hope Baptist Church",
+    "addr": "130 Delaware St SW, Grand Rapids, MI",
+    "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
+    "dates": "October 20 to November 1"
+   }
+  ],
+  "satellite": null
+ }
+}

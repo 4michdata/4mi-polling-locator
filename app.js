@@ -58,7 +58,7 @@ const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g,
   c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
-const state = { data: null, guide: null, geo: null, home: null, registered: null, school: null, origin: null, map: null };
+const state = { data: null, guide: null, early: null, geo: null, home: null, registered: null, school: null, origin: null, map: null };
 
 /* ---------------------------------------------------------------- utilities */
 
@@ -248,15 +248,14 @@ const STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
 let schoolCombo, dormCombo, homeCombo;
 
 async function boot() {
-  const [data, guide] = await Promise.all([
+  const [data, guide, early] = await Promise.all([
     fetch('data/dorms.json').then(r => r.json()),
     fetch('data/guide.json').then(r => r.json()).catch(() => null),
+    fetch('data/early-voting.json').then(r => r.json()).catch(() => null),
   ]);
-  state.data = data; state.guide = guide;
+  state.data = data; state.guide = guide; state.early = early;
   const d = state.data;
 
-  $('#regStart').href = CONFIG.registerUrl;
-  $('#regCheck').href = CONFIG.statusUrl;
   $('#footStamp').textContent = 'Data built ' + d.meta.built + '.';
 
   const ed = new Date(d.meta.election.date + 'T12:00:00');
@@ -299,7 +298,6 @@ async function boot() {
     renderGuide(b.dataset.reg);
     scene('guide');
   }));
-  renderDates($('#rDates'), true);
 
   $$('[data-go]').forEach(b => b.addEventListener('click', () => scene(b.dataset.go)));
   $('#addrGo').addEventListener('click', lookupAddress);
@@ -313,6 +311,10 @@ async function boot() {
 function fmtDate(iso) {
   const d = new Date(iso + 'T12:00:00');
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+function fmtLong(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
 }
 
 function renderDates(node, compact) {
@@ -339,9 +341,9 @@ function renderGuide(reg) {
   $('#gHomeBody').textContent = h.body;
   $('#gHomeTip').textContent = h.tip;
 
-  $('#gRegSay').textContent = reg === 'unsure'
-    ? 'The state keeps the official record. Check your status there first. If you are not on it, registering at your campus address takes a few minutes online until October 19, and in person after that.'
-    : 'Online or by mail until October 19. After that, in person at your city or township clerk with one proof of address, right through 8 pm on Election Day.';
+  $('#gRegOnline').textContent = g.register.online;
+  $('#gRegPerson').textContent = g.register.person;
+  $('#gRegNoSsn').textContent = g.register.noSsn;
   $('#gRegStart').href = CONFIG.registerUrl;
   $('#gRegCheck').href = CONFIG.statusUrl;
 
@@ -351,14 +353,55 @@ function renderGuide(reg) {
   $('#gId').innerHTML = g.id.items.map(x => '<li>' + esc(x) + '</li>').join('');
   $('#gIdNone').textContent = g.id.none;
 
-  $('#gAbsTitle').textContent = g.absentee.title;
-  $('#gAbsBody').textContent = g.absentee.body;
-  $('#gAbsCta').href = g.absentee.url;
-  $('#gAbsCtaText').textContent = g.absentee.cta;
+  $('#gEarlyTitle').textContent = g.early.title;
+  $('#gEarlyBody').textContent = g.early.body;
+  $('#gEarlyCta').href = g.early.lookup;
+  $('#gEarlyCtaText').textContent = g.early.cta;
 
   $('#gEligible').innerHTML = g.eligible.map(x => '<li>' + esc(x) + '</li>').join('');
   renderDates($('#gDates'), false);
-  $('#gVerified').textContent = 'Checked against the State of Michigan and Michigan Voting on ' + g.verified + '.';
+  $('#gVerified').textContent = 'Checked against the State of Michigan on ' + g.verified + '.';
+}
+
+/* Early voting on the result page. Sites are per city or township, chosen by
+   the clerk, and the state publishes no bulk list, so the table is built from
+   the program's own clerk confirmed crosswalk (build/build_early.py) and keyed
+   by precinct id. A precinct with no confirmed row gets the window and the
+   state's own lookup, nothing invented. On campus sites are listed first. */
+function renderEarly(code) {
+  const g = state.guide; if (!g) return;
+  const o = state.origin || {};
+  $('#evTitle').textContent = g.early.title;
+  $('#evBody').textContent = g.early.body;
+  $('#evLookup').href = g.early.lookup;
+  $('#evLookup span').textContent = g.early.cta;
+  const box = $('#evSites'); box.innerHTML = '';
+  const e = state.early && state.early.precincts && state.early.precincts[code];
+  if (!e || !/^\d{4}-\d{2}-\d{2}$/.test(e.confirmed || '') || !e.sites || !e.sites.length) return;
+  const sites = e.sites.filter(x => x.name && x.addr)
+    .sort((a, b) => (b.campus ? 1 : 0) - (a.campus ? 1 : 0));
+  if (!sites.length) return;
+  const dir = x => (o.lat && o.lng)
+    ? 'https://www.google.com/maps/dir/?api=1&origin=' + o.lat + ',' + o.lng +
+      '&destination=' + encodeURIComponent(x.addr) + '&travelmode=walking'
+    : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(x.addr);
+  const win = 'The dates and hours are the clerk\'s and can run longer than the statewide window of ' +
+    fmtLong(g.early.start) + ' to ' + fmtLong(g.early.end) + '.';
+  $('#evTitle').textContent = sites.length === 1 ? 'Your early voting site' : 'Your early voting sites';
+  $('#evBody').textContent = sites.length === 1
+    ? 'Confirmed with your clerk. Same ballot and same machines as Election Day, with shorter lines. ' + win
+    : 'Confirmed with your clerk. Any of them works for you, so pick the closest one. ' + win;
+  box.innerHTML = sites.map(x =>
+    `<div class="ev-site${x.campus ? ' campus' : ''}"><div>` +
+    (x.campus ? '<i class="on-campus">On campus</i>' : '') +
+    `<b>${esc(x.name)}</b><span>${esc(x.addr)}</span>` +
+    (x.dates ? `<span>${esc(x.dates)}</span>` : '') +
+    (x.hours ? `<span>${esc(x.hours)}</span>` : '') +
+    `</div><div class="ev-side"><small>Confirmed ${esc(e.confirmed)}</small>` +
+    `<a href="${dir(x)}" target="_blank" rel="noopener">Directions</a></div></div>`).join('') +
+    (e.satellite && e.satellite.where
+      ? `<div class="tip">${esc(e.satellite.where)}${e.satellite.hours ? ' ' + esc(e.satellite.hours) : ''}</div>` : '');
+  $('#evLookup span').textContent = 'Check it on the state site';
 }
 
 function pickSchool(key) {
@@ -531,6 +574,7 @@ function showResult() {
     (o.chk ? '' : ' Independently re-checked by dropping this building’s coordinates into the state precinct polygons.') +
     (CONFIG.googleKey ? ' <span id="civicLine"></span>' : '') + '</div>';
 
+  renderEarly(o.precinct);
   scene('result');
   drawMap(o, pollPt, poll).catch(() => {
     $('#mapNote').textContent = 'Map could not load, the links below still work';
@@ -618,5 +662,5 @@ async function share() {
   } catch (e) {}
 }
 
-window.__locator = { state, renderGuide, pickSchool, pickDorm };
+window.__locator = { state, renderGuide, renderEarly, pickSchool, pickDorm };
 boot();

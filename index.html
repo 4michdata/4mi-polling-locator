@@ -34,13 +34,13 @@
   <!-- ============================================================ 1 · START -->
   <section id="scene-start" class="scene">
     <div class="lede">
-      <h2>Find where <em>you</em> vote.<br>Down to the door.</h2>
-      <p>Pick your campus and your building. We fill in your address and show you the exact polling place, the walk, and what it looks like when you get there.</p>
+      <h2>Your polling place.<br><em>Down to the door.</em></h2>
+      <p>Pick your campus and your building. We already know the address, so we skip straight to the room you vote in, how far it is, and what the front door looks like.</p>
     </div>
 
     <div class="panel">
       <h3>First, where is home?</h3>
-      <p class="say">Your answer decides where you can register and what your options are. It takes one tap.</p>
+      <p class="say">One tap. It changes what applies to you.</p>
       <span class="label">Home state</span>
       <div class="combo" id="comboHome">
         <button class="combo-input" type="button" aria-haspopup="listbox" aria-expanded="false">
@@ -55,8 +55,8 @@
     </div>
 
     <div class="panel hide" id="regPanel">
-      <h3>Are you registered to vote at your school address?</h3>
-      <p class="say">Michigan students can register at their campus address. If you are not registered yet you still have time, and you can register in person right through Election Day.</p>
+      <h3>Are you registered at your school address?</h3>
+      <p class="say">If not, or not sure, there is still time, and it is quicker than you think.</p>
       <div class="choices">
         <button class="choice yes" data-reg="yes">
           <span class="tick"></span>
@@ -64,11 +64,11 @@
         </button>
         <button class="choice no" data-reg="no">
           <span class="tick"></span>
-          <span><b>No, not yet</b><em>See your options and how to register</em></span>
+          <span><b>No, not yet</b><em>See what applies to you</em></span>
         </button>
         <button class="choice" data-reg="unsure">
           <span class="tick"></span>
-          <span><b>I am not sure</b><em>Check your status, then find your polling place</em></span>
+          <span><b>I am not sure</b><em>Takes thirty seconds to find out</em></span>
         </button>
       </div>
     </div>
@@ -86,16 +86,18 @@
     </div>
 
     <div class="panel">
-      <h3>Register now</h3>
-      <p class="say" id="gRegSay"></p>
-      <div class="actions">
+      <h3>Register</h3>
+      <p class="say" id="gRegOnline"></p>
+      <p class="say" id="gRegPerson"></p>
+      <div class="tip" id="gRegNoSsn"></div>
+      <div class="actions" style="margin-top:16px">
         <a class="btn go" id="gRegStart" href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-          Register with the State of Michigan
+          Register online
         </a>
         <a class="btn" id="gRegCheck" href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          Check my status
+          Am I registered?
         </a>
         <button class="btn" data-go="locate">
           <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -105,29 +107,28 @@
     </div>
 
     <div class="panel">
-      <h3>What to bring to register in person</h3>
+      <h3>Registering in person? Bring one of these</h3>
       <p class="say" id="gProofIntro"></p>
       <ul class="list" id="gProof"></ul>
     </div>
 
     <div class="panel">
-      <h3>What counts as ID at the polls</h3>
+      <h3>ID at the polls</h3>
       <p class="say" id="gIdIntro"></p>
       <ul class="list" id="gId"></ul>
       <div class="tip" id="gIdNone"></div>
     </div>
 
     <div class="panel">
-      <h3 id="gAbsTitle"></h3>
-      <p class="say" id="gAbsBody"></p>
-      <div class="actions"><a class="btn" id="gAbsCta" href="#" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
-        <span id="gAbsCtaText"></span></a></div>
+      <h3 id="gEarlyTitle"></h3>
+      <p class="say" id="gEarlyBody"></p>
+      <div class="actions"><a class="btn" id="gEarlyCta" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="0"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span id="gEarlyCtaText"></span></a></div>
     </div>
 
     <div class="panel">
-      <h3>Every date that matters</h3>
-      <p class="say">For the November 3, 2026 general election. Polls are open 7 am to 8 pm on Election Day.</p>
+      <h3>Four dates</h3>
       <ol class="dates" id="gDates"></ol>
     </div>
 
@@ -139,39 +140,12 @@
     <p class="verified" id="gVerified"></p>
   </section>
 
-  <!-- ========================================================= 2 · REGISTER -->
-  <section id="scene-register" class="scene hide" data-retired="1">
-    <button class="back" data-go="start"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
-    <div class="panel">
-      <h3 id="regTitle">Let us get you registered first.</h3>
-      <p class="say" id="regSub">Registering at your campus address takes a few minutes. Once you are on the roll, come back here and we will show you where to vote.</p>
-      <div class="actions">
-        <a class="btn go" id="regStart" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
-          Register with the State of Michigan
-        </a>
-        <a class="btn" id="regCheck" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-          Check my status
-        </a>
-        <button class="btn" data-go="locate">
-          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-          Find my polling place anyway
-        </button>
-      </div>
-      <div class="note">
-        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
-        <div>In Michigan you can register and vote on the same day, including Election Day, at your city or township clerk's office. Bring proof of where you live, such as a housing contract, a utility bill, or a student ID with a current address document.</div>
-      </div>
-    </div>
-  </section>
-
   <!-- =========================================================== 3 · LOCATE -->
   <section id="scene-locate" class="scene hide">
     <button class="back" data-go="start"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
     <div class="panel">
       <h3>Where do you live?</h3>
-      <p class="say">We keep the address of every residence hall and student apartment building, so you will not have to type one.</p>
+      <p class="say">Every residence hall and student building on the list already has its address on file.</p>
 
       <span class="label">Campus</span>
       <div class="combo" id="comboSchool">
@@ -235,7 +209,7 @@
     </div>
 
     <div class="panel">
-      <span class="label">Your polling place on Election Day</span>
+      <span class="label">Election Day, November 3, 7 am to 8 pm</span>
       <div class="poll-name" id="pollName"></div>
       <div class="poll-addr" id="pollAddr"></div>
       <div class="poll-sub" id="pollSub"></div>
@@ -265,13 +239,19 @@
       <div class="prov" id="prov"></div>
     </div>
 
-    <div class="panel">
-      <h3>Before Election Day</h3>
-      <ol class="dates compact" id="rDates"></ol>
+    <div class="panel" id="evPanel">
+      <span class="label">Or vote early</span>
+      <h3 id="evTitle"></h3>
+      <p class="say" id="evBody"></p>
+      <div id="evSites"></div>
       <div class="actions" style="margin-top:14px">
+        <a class="btn go" id="evLookup" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span>Find my early voting site</span>
+        </a>
         <button class="btn" data-go="guide">
           <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          Read the full student guide
+          Student voting guide
         </button>
       </div>
     </div>

@@ -176,3 +176,14 @@ footer a{color:var(--navy)}
 .dates.compact .w{font-size:13.5px}
 @media(max-width:430px){ .dates li{grid-template-columns:92px 1fr} .dates .d{font-size:19px} }
 .verified{font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}
+
+.ev-site{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:12px 14px;border:1px solid var(--line-strong);border-left:4px solid var(--sky);margin-top:8px}
+.ev-site b{display:block;font-size:15px;font-weight:600;color:var(--navy)}
+.ev-site span{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:2px}
+.ev-site small{font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-faint);white-space:nowrap;padding-top:3px}
+.ev-site.campus{border-left-color:var(--navy);background:var(--wash)}
+.ev-site .on-campus{display:inline-block;font-style:normal;font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;background:var(--navy);padding:2px 7px;margin-bottom:6px}
+.ev-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ev-side a{font-family:var(--ui);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--navy);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+#evSites .tip{margin-top:10px}
+@media(max-width:560px){ .ev-site{grid-template-columns:1fr}.ev-side{flex-direction:row;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--line)}.ev-side small{padding-top:0}}
