@@ -1,14 +1,30 @@
-# 4 Michigan · Where I Vote
+# For Michigan · Where I Vote
 
-Public, student facing polling place locator. A student picks their campus and
-their building, and the page fills in the address and returns the polling place
-assigned to that building's precinct, with a map, a walk estimate, directions
-and Street View.
+Public, student facing polling place locator, built to live on 4mich.org. A
+student picks their campus and their building from two dropdowns, and the page
+fills in the address and returns the polling place assigned to that building's
+precinct, with a map, a walk estimate, directions and Street View.
 
 Live: https://4mi-where-i-vote.netlify.app
 
-No sign in, no voter PII, no backend. The page is three static files plus two
-JSON files, served from Netlify.
+No sign in, no voter PII, no backend. Static files served from Netlify.
+
+## Brand
+
+Every token in `styles.css` was read off 4mich.org itself: navy `#0B1F6B`, sky
+`#4FC3F7` with black type on the primary button, red `#D13630` used sparingly,
+Bebas Neue for headlines, Space Grotesk in uppercase for controls, square
+corners, `#333` body text on white. The header carries the site's own crest
+(`assets/fm-logo.png`, pulled from 4mich.org). It is not the field suite's dark
+teal, on purpose: this is a public page on the organization's website.
+
+Campus marks live in `assets/campus/`, normalized to 96x96. Twenty two came from
+each institution's own site. Seven institutions block automated fetching or
+serve only a 16 pixel icon (Aquinas, EMU, Kalamazoo College, Kettering, SVSU,
+Detroit Mercy, UM Dearborn) and show a navy chip with their initials instead.
+Drop a square PNG into `assets/campus/` named for the slug and add the slug to
+`MARKS` in `app.js` to promote one. University marks are their institutions'
+trademarks; their use here was a deliberate decision by the program.
 
 ## Where the answers come from
 

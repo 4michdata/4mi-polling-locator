@@ -60,67 +60,101 @@ const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const js   = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
 const geo  = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/precincts-geo.json'), 'utf8'));
 
-const dom = new JSDOM(html.replace(/<script src="https:\/\/api\.mapbox[^<]*<\/script>/, '')
-                          .replace('<script src="app.js"></script>', ''),
+const dom = new JSDOM(html.replace(/<script src="https:\/\/cdnjs[^<]*<\/script>/, '')
+                          .replace(/<script src="app\.js[^"]*"><\/script>/, ''),
   { runScripts: 'dangerously', pretendToBeVisual: true, url: 'https://locator.test/' });
 const w = dom.window;
-
 w.fetch = async (u) => {
   const file = String(u).includes('precincts-geo') ? 'data/precincts-geo.json' : 'data/dorms.json';
-  return { json: async () => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) };
+  return { ok: true, json: async () => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) };
 };
 w.scrollTo = () => {};
-w.mapboxgl = undefined;
-w.alert = (m) => { console.log('  (alert) ' + m); };
-
+w.L = undefined;
+w.alert = () => {};
 w.eval(js);
 await new Promise(r => setTimeout(r, 150));
 
 const d = w.document;
-ok('hero counts filled from data', d.querySelector('#statDorms').textContent === '736');
-ok('campus grid rendered', d.querySelectorAll('#schoolGrid .school').length === 29);
-ok('election date shown', /2026/.test(d.querySelector('#electionPill').textContent));
 
+/* brand */
+ok('real For Michigan logo in the header',
+   d.querySelector('.band img.logo').getAttribute('src') === 'assets/fm-logo.png');
+ok('navy band carries the tool name in the site\u2019s voice',
+   d.querySelector('.band .kicker').textContent === 'Voting resources' &&
+   d.querySelector('.band h1').textContent === 'Where I Vote');
+ok('page is the website\u2019s light theme, not the field suite\u2019s dark one',
+   /--navy:#0B1F6B/.test(fs.readFileSync(path.join(ROOT,'styles.css'),'utf8')) &&
+   /--sky:#4FC3F7/.test(fs.readFileSync(path.join(ROOT,'styles.css'),'utf8')) &&
+   !/#0c0d10|#0A1020/i.test(fs.readFileSync(path.join(ROOT,'styles.css'),'utf8')));
+ok('site fonts loaded: Bebas Neue and Space Grotesk',
+   /Bebas\+Neue/.test(html) && /Space\+Grotesk/.test(html));
+ok('election date and countdown shown', /2026/.test(d.querySelector('#when').textContent) &&
+   /days out/.test(d.querySelector('#when').textContent));
+
+/* the thing Abbie asked for: dropdowns, not tiles */
+ok('no tile grid anywhere', !d.querySelector('.schools, .school, .tile'));
+ok('campus control is a combobox',
+   !!d.querySelector('#comboSchool .combo-input[aria-haspopup="listbox"]'));
+ok('building control is a combobox',
+   !!d.querySelector('#comboDorm .combo-input[aria-haspopup="listbox"]'));
+ok('building picker hidden until a campus is chosen',
+   d.querySelector('#buildingBlock').classList.contains('hide'));
+
+/* registration routing */
 d.querySelector('[data-reg="no"]').dispatchEvent(new w.Event('click', { bubbles: true }));
 ok('answering "not yet" routes to registration',
    !d.querySelector('#scene-register').classList.contains('hide'));
 ok('registration links to the state', d.querySelector('#regStart').href.includes('sos.state.mi.us'));
-
 d.querySelector('[data-reg="yes"]').dispatchEvent(new w.Event('click', { bubbles: true }));
-ok('answering "yes" routes to the campus picker',
+ok('answering "yes" routes to the picker',
    !d.querySelector('#scene-locate').classList.contains('hide'));
 
-const search = d.querySelector('#schoolSearch');
-search.value = 'michigan state';
-search.dispatchEvent(new w.Event('input', { bubbles: true }));
-ok('campus search narrows the grid', d.querySelectorAll('#schoolGrid .school').length === 1,
-   d.querySelectorAll('#schoolGrid .school').length + ' left');
+/* campus dropdown */
+d.querySelector('#comboSchool .combo-input').dispatchEvent(new w.Event('click', { bubbles: true }));
+ok('campus dropdown opens', d.querySelector('#comboSchool').classList.contains('open'));
+const sOpts = d.querySelectorAll('#comboSchool .combo-list .opt');
+ok('all 29 campuses listed', sOpts.length === 29, sOpts.length + ' listed');
 
-d.querySelector('#schoolGrid .school').dispatchEvent(new w.Event('click', { bubbles: true }));
-ok('picking a campus opens the building list',
-   !d.querySelector('#scene-dorm').classList.contains('hide'));
+const withMark = d.querySelectorAll('#comboSchool .combo-list .opt img.mark').length;
+const withInit = d.querySelectorAll('#comboSchool .combo-list .opt .initials').length;
+ok('22 campuses show a real mark', withMark === 22, withMark + ' marks');
+ok('the other 7 fall back to a typographic chip', withInit === 7, withInit + ' chips');
+ok('every campus row has one or the other', withMark + withInit === 29);
+
+const ss = d.querySelector('#comboSchool .combo-search');
+ss.value = 'michigan state';
+ss.dispatchEvent(new w.Event('input', { bubbles: true }));
+ok('campus search narrows the list',
+   d.querySelectorAll('#comboSchool .combo-list .opt').length === 1);
+d.querySelector('#comboSchool .combo-list .opt').dispatchEvent(new w.Event('click', { bubbles: true }));
+ok('picking a campus reveals the building picker',
+   !d.querySelector('#buildingBlock').classList.contains('hide'));
+ok('campus dropdown closes on pick', !d.querySelector('#comboSchool').classList.contains('open'));
+
+/* building dropdown */
+d.querySelector('#comboDorm .combo-input').dispatchEvent(new w.Event('click', { bubbles: true }));
 const msuCount = data.dorms.filter(x => x.s === 'MSU').length;
-ok('all MSU buildings listed', d.querySelectorAll('#dormList .row').length === msuCount,
-   d.querySelectorAll('#dormList .row').length + ' of ' + msuCount);
-
-const ds = d.querySelector('#dormSearch');
-ds.value = 'abbot';
+ok('all MSU buildings listed',
+   d.querySelectorAll('#comboDorm .combo-list .opt').length === msuCount);
+const ds = d.querySelector('#comboDorm .combo-search');
+ds.value = 'abbot hall';
 ds.dispatchEvent(new w.Event('input', { bubbles: true }));
-const rows = d.querySelectorAll('#dormList .row');
-ok('building search finds Abbot Hall', rows.length >= 1 && /Abbot/i.test(rows[0].textContent));
+const dOpts = d.querySelectorAll('#comboDorm .combo-list .opt');
+ok('building search finds Abbot Hall', dOpts.length >= 1 && /Abbot Hall/.test(dOpts[0].textContent));
+dOpts[0].dispatchEvent(new w.Event('click', { bubbles: true }));
+await new Promise(r => setTimeout(r, 60));
 
-rows[0].dispatchEvent(new w.Event('click', { bubbles: true }));
-await new Promise(r => setTimeout(r, 80));
 ok('picking a building shows the result',
    !d.querySelector('#scene-result').classList.contains('hide'));
-
 const pollName = d.querySelector('#pollName').textContent;
-const pollAddr = d.querySelector('#pollAddr').textContent;
 ok('polling place named', pollName.length > 2, pollName);
-ok('polling place addressed', /\d/.test(pollAddr), pollAddr);
 ok('polling place is title case, not shouting', pollName !== pollName.toUpperCase(), pollName);
+ok('polling place addressed', /\d/.test(d.querySelector('#pollAddr').textContent));
 ok('origin address shown back', d.querySelector('#fromAddr').textContent.length > 4);
+ok('campus mark carried onto the result', d.querySelector('#fromMark').hidden === false);
 ok('distance and walk time present', d.querySelectorAll('#facts .fact').length >= 3);
+ok('distance is labelled straight line, not a routed walk',
+   /Straight line/.test(d.querySelector('#facts').textContent));
 ok('directions deep link built',
    d.querySelector('#btnDir').href.includes('google.com/maps/dir') &&
    d.querySelector('#btnDir').href.includes('travelmode=walking'));
@@ -132,6 +166,14 @@ const abbot = data.dorms.find(x => x.s === 'MSU' && /^Abbot Hall/i.test(x.n));
 ok('Abbot Hall resolves to precinct 0652412000010', abbot.p === '0652412000010', abbot.p);
 ok('that precinct votes at the Union building',
    /UNION/i.test(data.precincts[abbot.p].poll.name), data.precincts[abbot.p].poll.name);
+
+/* assets referenced must exist on disk */
+console.log('\nassets');
+ok('For Michigan logo file present', fs.existsSync(path.join(ROOT, 'assets/fm-logo.png')));
+const marksOnPage = [...d.querySelectorAll('#comboSchool .combo-list img.mark')]
+  .map(i => i.getAttribute('src'));
+const missing = marksOnPage.filter(s => !fs.existsSync(path.join(ROOT, s)));
+ok('every campus mark the page references exists', missing.length === 0, missing.join(', '));
 
 /* ---------------------------------------------- 4 the address fallback */
 console.log('\naddress fallback');

@@ -1,0 +1,11 @@
+{
+  "MSU":"msu.edu", "Hope":"hope.edu", "UofM AA":"umich.edu", "WSU":"wayne.edu",
+  "GVSU":"gvsu.edu", "CMU":"cmich.edu", "WMU":"wmich.edu", "FSU":"ferris.edu",
+  "OU":"oakland.edu", "EMU":"emich.edu", "Michigan Tech":"mtu.edu", "NMU":"nmu.edu",
+  "Albion":"albion.edu", "Alma":"alma.edu", "SVSU":"svsu.edu", "Aquinas":"aquinas.edu",
+  "Lawrence Tech":"ltu.edu", "UofM Flint":"umflint.edu", "Andrews":"andrews.edu",
+  "Northwood":"northwood.edu", "NWMC":"nmc.edu", "KC":"kzoo.edu",
+  "Davenport":"davenport.edu", "UofM Dearborn":"umdearborn.edu",
+  "Kettering":"kettering.edu", "UDM":"udmercy.edu", "Jackson":"jccmi.edu",
+  "LMC":"lakemichigancollege.edu", "Schoolcraft":"schoolcraft.edu"
+}
