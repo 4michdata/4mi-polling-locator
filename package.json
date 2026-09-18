@@ -1,0 +1,10 @@
+{
+  "name": "4mi-polling-locator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Public student facing polling place locator for 4 Michigan",
+  "scripts": {
+    "data": "python3 build/build_data.py && python3 build/fill_city.py && python3 build/validate.py",
+    "test": "node tests/smoke.mjs"
+  }
+}

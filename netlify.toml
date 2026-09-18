@@ -1,0 +1,37 @@
+# 4 Michigan Polling Locator. Static, public, no functions, no build step.
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(self), camera=(), microphone=(), payment=()"
+
+# The data files change only when the turf record or the state layer changes,
+# so they are revalidated rather than cached hard. The page itself is small.
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# The page, its script and its stylesheet are small and carry all behaviour.
+# Revalidating them costs a conditional request and guarantees nobody is
+# running last week's logic against this week's data.
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

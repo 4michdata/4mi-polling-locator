@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Find where you vote · 4 Michigan</title>
+<meta name="description" content="Find your polling place in Michigan. Pick your school and residence hall and we fill in the address for you, then show you the walk to your polling place.">
+<meta name="theme-color" content="#0A1020">
+<meta property="og:title" content="Find where you vote">
+<meta property="og:description" content="Pick your school and your building. We will show you exactly where you vote and how to walk there.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400..600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=202609181904">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar">
+    <div class="brand">
+      <div class="mark">4</div>
+      <div>4 Michigan<small>Student voting</small></div>
+    </div>
+    <div class="pill" id="electionPill">November 3, 2026</div>
+  </div>
+
+  <!-- ============================================================ 1 · HERO -->
+  <section id="scene-start" class="scene">
+    <div class="hero">
+      <div class="kick">Michigan General Election</div>
+      <h1>Find <em>where you vote</em>, down to the door.</h1>
+      <p class="lede">Pick your school and your building. We fill in your address and show you the exact polling place, the walk, and what it looks like when you get there.</p>
+      <div class="stats">
+        <div class="stat"><b id="statSchools">29</b><span>Campuses</span></div>
+        <div class="stat"><b id="statDorms">736</b><span>Buildings</span></div>
+        <div class="stat"><b id="statPolls">149</b><span>Polling places</span></div>
+      </div>
+    </div>
+
+    <div class="card primary">
+      <h2>First, are you registered to vote at your school address?</h2>
+      <p class="sub">Michigan students can register at their campus address. If you are not registered yet, you still have time, and you can register in person right through Election Day.</p>
+      <div class="choices">
+        <button class="choice yes" data-reg="yes">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <span><b>Yes, at my campus address</b><em>Go straight to your polling place</em></span>
+        </button>
+        <button class="choice no" data-reg="no">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span><b>No, not yet</b><em>We will show you how to register first</em></span>
+        </button>
+        <button class="choice" data-reg="unsure">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M9.1 9a3 3 0 1 1 4.5 2.6c-.9.5-1.6 1.2-1.6 2.4"/><path d="M12 17h.01"/></svg></span>
+          <span><b>I am not sure</b><em>Check your status, then find your polling place</em></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================== 2 · REGISTER -->
+  <section id="scene-register" class="scene hide">
+    <button class="back" data-go="start"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
+    <div class="card primary">
+      <h2 id="regTitle">Let us get you registered first.</h2>
+      <p class="sub" id="regSub">Registering at your campus address takes a few minutes. Once you are on the roll, come back here and we will show you where to vote.</p>
+      <div class="actions">
+        <a class="btn go" id="regStart" href="https://mvic.sos.state.mi.us/RegisterVoter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+          Register with the State of Michigan
+        </a>
+        <a class="btn" id="regCheck" href="https://mvic.sos.state.mi.us/Voter/Index" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Check my status
+        </a>
+        <button class="btn ghost" data-go="locate">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Find my polling place anyway
+        </button>
+      </div>
+      <div class="note">
+        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+        <div>In Michigan you can register and vote on the same day, including Election Day, at your city or township clerk's office. Bring proof of where you live, such as a housing contract, a utility bill, or a student ID with a current address document.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== 3 · LOCATE -->
+  <section id="scene-locate" class="scene hide">
+    <button class="back" data-go="start"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
+    <div class="steps" id="steps"></div>
+    <div class="card primary">
+      <h2>Where do you live?</h2>
+      <p class="sub">Pick your campus. We keep the address of every residence hall and student apartment building, so you will not have to type one.</p>
+      <div class="field">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" id="schoolSearch" placeholder="Search campuses" autocomplete="off" aria-label="Search campuses">
+      </div>
+      <div class="schools" id="schoolGrid"></div>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+        <span class="label">Not on this list</span>
+        <button class="choice" data-go="address">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg></span>
+          <span><b>Use any Michigan address</b><em>Off campus, at home, or a building we do not have yet</em></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== 4 · DORM -->
+  <section id="scene-dorm" class="scene hide">
+    <button class="back" data-go="locate"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>All campuses</button>
+    <div class="steps" id="steps2"></div>
+    <div class="card primary">
+      <h2 id="dormTitle">Which building?</h2>
+      <p class="sub" id="dormSub">Find your residence hall or apartment building. Your address fills in automatically.</p>
+      <div class="field">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" id="dormSearch" placeholder="Search buildings" autocomplete="off" aria-label="Search buildings">
+      </div>
+      <div class="list" id="dormList"></div>
+      <div style="margin-top:14px">
+        <button class="back" data-go="address"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>My building is not listed, let me type an address</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= 5 · ADDRESS -->
+  <section id="scene-address" class="scene hide">
+    <button class="back" data-go="locate"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
+    <div class="card primary">
+      <h2>Type your Michigan address</h2>
+      <p class="sub">Street, city, and ZIP if you have it. We match it to your voting precinct and the polling place assigned to it.</p>
+      <div class="field">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        <input type="text" id="addrInput" placeholder="1120 S University Ave, Ann Arbor" autocomplete="street-address" aria-label="Your address">
+      </div>
+      <div class="actions">
+        <button class="btn go" id="addrGo">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Find my polling place
+        </button>
+      </div>
+      <div id="addrMsg"></div>
+    </div>
+  </section>
+
+  <!-- ======================================================== 6 · RESULT -->
+  <section id="scene-result" class="scene hide">
+    <button class="back" data-go="locate"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Start over</button>
+
+    <div class="from" id="fromStrip">
+      <span class="dot"></span>
+      <div><b id="fromName"></b><em id="fromAddr"></em></div>
+      <button id="fromChange">Change</button>
+    </div>
+
+    <div class="card primary">
+      <span class="label">Your polling place on Election Day</span>
+      <div class="result-head">
+        <span class="ic"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
+        <div>
+          <div class="poll-name" id="pollName"></div>
+          <div class="poll-addr" id="pollAddr"></div>
+          <div class="poll-sub" id="pollSub"></div>
+        </div>
+      </div>
+
+      <div class="facts" id="facts"></div>
+
+      <div class="map-wrap">
+        <div class="map" id="map"></div>
+        <div class="map-note" id="mapNote">Your building to your polling place</div>
+      </div>
+
+      <div class="actions">
+        <a class="btn go" id="btnDir" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="m3 11 19-9-9 19-2-8-8-2Z"/></svg>
+          Get walking directions
+        </a>
+        <a class="btn" id="btnPano" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18Z"/></svg>
+          See it in Street View
+        </a>
+        <button class="btn" id="btnShare">
+          <svg viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M16 6l-4-4-4 4M12 2v14"/></svg>
+          Share this
+        </button>
+      </div>
+
+      <div class="prov" id="prov"></div>
+    </div>
+
+    <div class="note" id="approxNote" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+      <div id="approxText"></div>
+    </div>
+  </section>
+
+  <footer>
+    <b>Polling places change.</b> Confirm on the state's own site before you head out, at
+    <a href="https://mvic.sos.state.mi.us/Voter/Index" target="_blank" rel="noopener">Michigan Voter Information Center</a>,
+    or call your city or township clerk.<br>
+    Building addresses come from the 4 Michigan turf record. Precincts and polling places come from the State of Michigan's published 2026 precinct layer.
+    <span id="footStamp"></span>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="app.js?v=202609181904"></script>
+</body>
+</html>
