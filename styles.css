@@ -156,3 +156,23 @@ footer b{color:var(--ink-soft);font-weight:600}
 footer a{color:var(--navy)}
 
 .hide{display:none!important}
+
+/* ------------------------------------------------------------------- guide */
+.tip{margin-top:12px;padding:12px 14px;background:var(--wash);border-left:4px solid var(--sky);font-size:14px;line-height:1.55;color:var(--ink)}
+.tip:empty{display:none}
+.list{list-style:none;display:grid;gap:8px}
+.list li{position:relative;padding-left:22px;font-size:15px;line-height:1.5}
+.list li::before{content:"";position:absolute;left:0;top:9px;width:10px;height:10px;background:var(--sky)}
+.dates{list-style:none;display:grid;gap:0;border-top:1px solid var(--line)}
+.dates li{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.dates .d{font-family:var(--display);font-size:22px;line-height:1;color:var(--navy);letter-spacing:.02em;padding-top:2px}
+.dates .d small{display:block;font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--ink-faint);margin-top:4px}
+.dates .w{font-size:14.5px;line-height:1.5;color:var(--ink)}
+.dates li.past{opacity:.45}
+.dates li.past .d{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--red)}
+.dates li.next .d{color:var(--red)}
+.dates.compact li{padding:9px 0;grid-template-columns:96px 1fr}
+.dates.compact .d{font-size:18px}
+.dates.compact .w{font-size:13.5px}
+@media(max-width:430px){ .dates li{grid-template-columns:92px 1fr} .dates .d{font-size:19px} }
+.verified{font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-faint);margin-top:6px}

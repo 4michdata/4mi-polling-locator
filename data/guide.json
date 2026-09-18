@@ -1,0 +1,69 @@
+{
+  "verified": "2026-09-18",
+  "sources": [
+    "michiganvoting.org/november-2026",
+    "michiganvoting.org/student-voters",
+    "michigan.gov/sos/elections/voting/register-to-vote",
+    "michigan.gov/sos/elections/voting/first-time-voters",
+    "vote411.org/michigan",
+    "bridgemi.com, Michigan 2026 elections: dates, deadlines"
+  ],
+  "election": { "date": "2026-11-03", "name": "Michigan General Election", "polls": "7 am to 8 pm" },
+  "dates": [
+    { "on": "2026-09-24", "what": "Absentee ballots available. You can vote in person at your clerk's office from this day on." },
+    { "on": "2026-10-13", "what": "Last comfortable day to request an absentee ballot by mail, so it reaches you in time." },
+    { "on": "2026-10-19", "what": "Last day to register online or by mail. After this, registration is in person at your clerk with proof of where you live." },
+    { "on": "2026-10-20", "what": "Last day to safely return an absentee ballot by mail. After this, hand it to your clerk or a drop box." },
+    { "on": "2026-10-24", "what": "Statewide early voting opens. Nine days, every day, at early voting sites." },
+    { "on": "2026-10-30", "what": "5 pm. Deadline to request an absentee ballot by mail." },
+    { "on": "2026-11-01", "what": "Last day of early voting." },
+    { "on": "2026-11-02", "what": "4 pm. Deadline to request and vote an absentee ballot in person at your clerk's office." },
+    { "on": "2026-11-03", "what": "Election Day. Polls open 7 am to 8 pm. Register and vote at your clerk's office until 8 pm." }
+  ],
+  "ballot": "Governor, Attorney General, Secretary of State, US Senate, US House, the full state House and half the state Senate, plus local races and proposals.",
+  "home": {
+    "mi": {
+      "title": "You can vote at school or at home. Your choice.",
+      "body": "Michigan lets you register at either address, not both. Registering at your campus address means your ballot covers the races where you live now, and your polling place is the one this page finds for you. Registering at home means an absentee ballot mailed to campus, or a trip home. Either is legal. Pick the one you will actually follow through on.",
+      "tip": "Registering at your campus address also moves the address on your Michigan driver's license or state ID. That is automatic and it is the law, not a mistake."
+    },
+    "other": {
+      "title": "You can register in Michigan at your campus address.",
+      "body": "Out of state students at a Michigan school can register here using their school address. You give up your registration back home when you do, since you can only be registered in one place. If you would rather vote at home, request a mail ballot from your home state now; deadlines there are not the same as ours.",
+      "tip": "You do not need a Michigan license to register here. Your out of state license works as photo ID at the polls."
+    }
+  },
+  "proof": {
+    "intro": "If you register in person after October 19, or on Election Day, bring one document that shows your name and your campus address. Any of these works:",
+    "items": [
+      "A page from your student portal showing your name and on campus address, on your phone is fine",
+      "Financial aid documents or school enrollment forms",
+      "A lease or housing contract",
+      "A utility bill, bank statement, or insurance document",
+      "A paycheck or government check",
+      "A Michigan license or state ID, or a US passport"
+    ]
+  },
+  "id": {
+    "intro": "At the polls you will be asked for photo ID. Any of these works:",
+    "items": [
+      "Student ID with photo from your college or university",
+      "Michigan driver's license or state ID",
+      "Driver's license or state ID from any other state",
+      "US passport, military ID, tribal ID, or any government issued photo ID"
+    ],
+    "none": "No ID on you? You still vote. You sign a short affidavit saying you did not have it, and your ballot is counted exactly like everyone else's."
+  },
+  "eligible": [
+    "A US citizen",
+    "18 by Election Day",
+    "Living at the address you register at for 30 days by Election Day",
+    "Not currently serving a sentence in jail or prison"
+  ],
+  "absentee": {
+    "title": "Voting by mail from campus",
+    "body": "Any Michigan voter can vote absentee, no reason needed. Request the ballot online, it arrives in the mail, you fill it out and send it back or drop it in a drop box. If you are registered at home in Michigan but living at school, this is how you vote without the drive.",
+    "url": "https://mvic.sos.state.mi.us/AVApplication/Index",
+    "cta": "Request an absentee ballot"
+  }
+}

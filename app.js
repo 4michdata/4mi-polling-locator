@@ -58,7 +58,7 @@ const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g,
   c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
-const state = { data: null, geo: null, registered: null, school: null, origin: null, map: null };
+const state = { data: null, guide: null, geo: null, home: null, registered: null, school: null, origin: null, map: null };
 
 /* ---------------------------------------------------------------- utilities */
 
@@ -238,10 +238,21 @@ function makeCombo(root, { placeholder, onPick }) {
 
 /* --------------------------------------------------------------------- boot */
 
-let schoolCombo, dormCombo;
+const STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
+  'District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky',
+  'Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana',
+  'Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota',
+  'Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas',
+  'Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Outside the United States'];
+
+let schoolCombo, dormCombo, homeCombo;
 
 async function boot() {
-  state.data = await (await fetch('data/dorms.json')).json();
+  const [data, guide] = await Promise.all([
+    fetch('data/dorms.json').then(r => r.json()),
+    fetch('data/guide.json').then(r => r.json()).catch(() => null),
+  ]);
+  state.data = data; state.guide = guide;
   const d = state.data;
 
   $('#regStart').href = CONFIG.registerUrl;
@@ -268,22 +279,86 @@ async function boot() {
     mark: markHtml(s.k, s.n), search: (s.n + ' ' + s.k + ' ' + (s.city || '')).toLowerCase(),
   })));
 
+  homeCombo = makeCombo($('#comboHome'), {
+    placeholder: 'Select your home state',
+    onPick: it => {
+      state.home = it.key;
+      /* Michigan is listed first: for a page on 4mich.org it is the answer most
+         of the time, and nobody should scroll to M for it. */
+      $('#regPanel').classList.remove('hide');
+      const rp = $('#regPanel');
+      if (rp.scrollIntoView) rp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+  });
+  homeCombo.setItems([...STATES.filter(x => x === 'Michigan'), ...STATES.filter(x => x !== 'Michigan')]
+    .map(x => ({ key: x, label: x, mark: '', search: x.toLowerCase() })));
+
   $$('[data-reg]').forEach(b => b.addEventListener('click', () => {
     state.registered = b.dataset.reg;
     if (b.dataset.reg === 'yes') return scene('locate');
-    const unsure = b.dataset.reg === 'unsure';
-    $('#regTitle').textContent = unsure ? 'Let us check that first.' : 'Let us get you registered first.';
-    $('#regSub').textContent = unsure
-      ? 'The state keeps the official record. Check your status there, and if you are not on it yet you can register at your campus address in a few minutes.'
-      : 'Registering at your campus address takes a few minutes. Once you are on the roll, come back here and we will show you where to vote.';
-    scene('register');
+    renderGuide(b.dataset.reg);
+    scene('guide');
   }));
+  renderDates($('#rDates'), true);
 
   $$('[data-go]').forEach(b => b.addEventListener('click', () => scene(b.dataset.go)));
   $('#addrGo').addEventListener('click', lookupAddress);
   $('#addrInput').addEventListener('keydown', e => { if (e.key === 'Enter') lookupAddress(); });
   $('#fromChange').addEventListener('click', () => scene('locate'));
   $('#btnShare').addEventListener('click', share);
+}
+
+/* ------------------------------------------------------------------- guide */
+
+function fmtDate(iso) {
+  const d = new Date(iso + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function renderDates(node, compact) {
+  const g = state.guide; if (!g || !node) return;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  let nextMarked = false;
+  const rows = compact ? g.dates.filter(x => new Date(x.on + 'T12:00:00') >= today).slice(0, 5) : g.dates;
+  node.innerHTML = rows.map(x => {
+    const when = new Date(x.on + 'T12:00:00');
+    const past = when < today;
+    const next = !past && !nextMarked; if (next) nextMarked = true;
+    const days = Math.round((when - today) / 86400000);
+    return `<li class="${past ? 'past' : ''} ${next ? 'next' : ''}">
+      <span class="d">${esc(fmtDate(x.on))}<small>${past ? 'passed' : days === 0 ? 'today' : days === 1 ? 'tomorrow' : 'in ' + days + ' days'}</small></span>
+      <span class="w">${esc(x.what)}</span></li>`;
+  }).join('');
+}
+
+function renderGuide(reg) {
+  const g = state.guide; if (!g) return;
+  const mi = state.home === 'Michigan';
+  const h = mi ? g.home.mi : g.home.other;
+  $('#gHomeTitle').textContent = h.title;
+  $('#gHomeBody').textContent = h.body;
+  $('#gHomeTip').textContent = h.tip;
+
+  $('#gRegSay').textContent = reg === 'unsure'
+    ? 'The state keeps the official record. Check your status there first. If you are not on it, registering at your campus address takes a few minutes online until October 19, and in person after that.'
+    : 'Online or by mail until October 19. After that, in person at your city or township clerk with one proof of address, right through 8 pm on Election Day.';
+  $('#gRegStart').href = CONFIG.registerUrl;
+  $('#gRegCheck').href = CONFIG.statusUrl;
+
+  $('#gProofIntro').textContent = g.proof.intro;
+  $('#gProof').innerHTML = g.proof.items.map(x => '<li>' + esc(x) + '</li>').join('');
+  $('#gIdIntro').textContent = g.id.intro;
+  $('#gId').innerHTML = g.id.items.map(x => '<li>' + esc(x) + '</li>').join('');
+  $('#gIdNone').textContent = g.id.none;
+
+  $('#gAbsTitle').textContent = g.absentee.title;
+  $('#gAbsBody').textContent = g.absentee.body;
+  $('#gAbsCta').href = g.absentee.url;
+  $('#gAbsCtaText').textContent = g.absentee.cta;
+
+  $('#gEligible').innerHTML = g.eligible.map(x => '<li>' + esc(x) + '</li>').join('');
+  renderDates($('#gDates'), false);
+  $('#gVerified').textContent = 'Checked against the State of Michigan and Michigan Voting on ' + g.verified + '.';
 }
 
 function pickSchool(key) {
@@ -543,4 +618,5 @@ async function share() {
   } catch (e) {}
 }
 
+window.__locator = { state, renderGuide, pickSchool, pickDorm };
 boot();

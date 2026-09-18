@@ -39,7 +39,23 @@
     </div>
 
     <div class="panel">
-      <h3>First, are you registered to vote at your school address?</h3>
+      <h3>First, where is home?</h3>
+      <p class="say">Your answer decides where you can register and what your options are. It takes one tap.</p>
+      <span class="label">Home state</span>
+      <div class="combo" id="comboHome">
+        <button class="combo-input" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span class="val ph">Select your home state</span>
+          <span class="caret"></span>
+        </button>
+        <div class="combo-pop">
+          <input class="combo-search" type="search" placeholder="Search states" autocomplete="off" aria-label="Search states">
+          <div class="combo-list" role="listbox"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel hide" id="regPanel">
+      <h3>Are you registered to vote at your school address?</h3>
       <p class="say">Michigan students can register at their campus address. If you are not registered yet you still have time, and you can register in person right through Election Day.</p>
       <div class="choices">
         <button class="choice yes" data-reg="yes">
@@ -48,7 +64,7 @@
         </button>
         <button class="choice no" data-reg="no">
           <span class="tick"></span>
-          <span><b>No, not yet</b><em>We will show you how to register first</em></span>
+          <span><b>No, not yet</b><em>See your options and how to register</em></span>
         </button>
         <button class="choice" data-reg="unsure">
           <span class="tick"></span>
@@ -58,8 +74,73 @@
     </div>
   </section>
 
+  <!-- ============================================================ 1b · GUIDE -->
+  <section id="scene-guide" class="scene hide">
+    <button class="back" data-go="start"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
+
+    <div class="panel">
+      <span class="label">Your options</span>
+      <h3 id="gHomeTitle"></h3>
+      <p class="say" id="gHomeBody"></p>
+      <div class="tip" id="gHomeTip"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Register now</h3>
+      <p class="say" id="gRegSay"></p>
+      <div class="actions">
+        <a class="btn go" id="gRegStart" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+          Register with the State of Michigan
+        </a>
+        <a class="btn" id="gRegCheck" href="#" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          Check my status
+        </a>
+        <button class="btn" data-go="locate">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Find my polling place
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>What to bring to register in person</h3>
+      <p class="say" id="gProofIntro"></p>
+      <ul class="list" id="gProof"></ul>
+    </div>
+
+    <div class="panel">
+      <h3>What counts as ID at the polls</h3>
+      <p class="say" id="gIdIntro"></p>
+      <ul class="list" id="gId"></ul>
+      <div class="tip" id="gIdNone"></div>
+    </div>
+
+    <div class="panel">
+      <h3 id="gAbsTitle"></h3>
+      <p class="say" id="gAbsBody"></p>
+      <div class="actions"><a class="btn" id="gAbsCta" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
+        <span id="gAbsCtaText"></span></a></div>
+    </div>
+
+    <div class="panel">
+      <h3>Every date that matters</h3>
+      <p class="say">For the November 3, 2026 general election. Polls are open 7 am to 8 pm on Election Day.</p>
+      <ol class="dates" id="gDates"></ol>
+    </div>
+
+    <div class="panel">
+      <h3>Who can register</h3>
+      <ul class="list" id="gEligible"></ul>
+    </div>
+
+    <p class="verified" id="gVerified"></p>
+  </section>
+
   <!-- ========================================================= 2 · REGISTER -->
-  <section id="scene-register" class="scene hide">
+  <section id="scene-register" class="scene hide" data-retired="1">
     <button class="back" data-go="start"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>Back</button>
     <div class="panel">
       <h3 id="regTitle">Let us get you registered first.</h3>
@@ -182,6 +263,17 @@
       </div>
 
       <div class="prov" id="prov"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Before Election Day</h3>
+      <ol class="dates compact" id="rDates"></ol>
+      <div class="actions" style="margin-top:14px">
+        <button class="btn" data-go="guide">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Read the full student guide
+        </button>
+      </div>
     </div>
 
     <div class="note" id="approxNote" style="display:none">

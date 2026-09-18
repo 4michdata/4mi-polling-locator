@@ -44,7 +44,7 @@ ok('no name or birth fields in the public file',
 
 /* -------------------------------------------------------- 2 house style */
 console.log('\nhouse style');
-const sources = ['index.html', 'app.js', 'styles.css', 'README.md', 'data/dorms.json']
+const sources = ['index.html', 'app.js', 'styles.css', 'README.md', 'data/dorms.json', 'data/guide.json']
   .filter(f => fs.existsSync(path.join(ROOT, f)))
   .map(f => [f, fs.readFileSync(path.join(ROOT, f), 'utf8')]);
 for (const [f, txt] of sources) {
@@ -65,7 +65,8 @@ const dom = new JSDOM(html.replace(/<script src="https:\/\/cdnjs[^<]*<\/script>/
   { runScripts: 'dangerously', pretendToBeVisual: true, url: 'https://locator.test/' });
 const w = dom.window;
 w.fetch = async (u) => {
-  const file = String(u).includes('precincts-geo') ? 'data/precincts-geo.json' : 'data/dorms.json';
+  const file = String(u).includes('precincts-geo') ? 'data/precincts-geo.json'
+             : String(u).includes('guide') ? 'data/guide.json' : 'data/dorms.json';
   return { ok: true, json: async () => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')) };
 };
 w.scrollTo = () => {};
@@ -100,11 +101,34 @@ ok('building control is a combobox',
 ok('building picker hidden until a campus is chosen',
    d.querySelector('#buildingBlock').classList.contains('hide'));
 
-/* registration routing */
+/* home state first, Michigan pinned to the top */
+ok('registration question waits for a home state', d.querySelector('#regPanel').classList.contains('hide'));
+d.querySelector('#comboHome .combo-input').dispatchEvent(new w.Event('click', { bubbles: true }));
+const hOpts = d.querySelectorAll('#comboHome .combo-list .opt');
+ok('51 home choices plus outside the US', hOpts.length === 52, hOpts.length + ' listed');
+ok('Michigan is the first option', /^Michigan/.test(hOpts[0].textContent.trim()));
+hOpts[0].dispatchEvent(new w.Event('click', { bubbles: true }));
+ok('picking a home state reveals the registration question', !d.querySelector('#regPanel').classList.contains('hide'));
+
+/* the guide */
 d.querySelector('[data-reg="no"]').dispatchEvent(new w.Event('click', { bubbles: true }));
-ok('answering "not yet" routes to registration',
-   !d.querySelector('#scene-register').classList.contains('hide'));
-ok('registration links to the state', d.querySelector('#regStart').href.includes('sos.state.mi.us'));
+ok('answering "not yet" opens the student guide', !d.querySelector('#scene-guide').classList.contains('hide'));
+ok('guide speaks to a Michigan student', /school or at home/.test(d.querySelector('#gHomeTitle').textContent));
+ok('guide registration link goes to the state', d.querySelector('#gRegStart').href.includes('sos.state.mi.us'));
+ok('guide lists proof of residence including the student portal',
+   d.querySelectorAll('#gProof li').length >= 5 && /student portal/i.test(d.querySelector('#gProof').textContent));
+ok('guide says student ID counts at the polls', /Student ID/.test(d.querySelector('#gId').textContent));
+ok('guide says you can still vote with no ID', /still vote/.test(d.querySelector('#gIdNone').textContent));
+ok('guide carries all nine dates', d.querySelectorAll('#gDates li').length === 9);
+ok('dates include the October 19 registration cutoff', /Oct 19/.test(d.querySelector('#gDates').textContent));
+ok('exactly one date is marked next', d.querySelectorAll('#gDates li.next').length === 1);
+ok('guide names its verification date', /2026-09-18/.test(d.querySelector('#gVerified').textContent));
+
+/* out of state wording differs */
+w.__locator.state.home = 'Ohio'; w.__locator.renderGuide('no');
+ok('an out of state student gets the out of state guidance', /campus address/.test(d.querySelector('#gHomeTitle').textContent) && /Out of state/.test(d.querySelector('#gHomeBody').textContent));
+w.__locator.state.home = 'Michigan';
+
 d.querySelector('[data-reg="yes"]').dispatchEvent(new w.Event('click', { bubbles: true }));
 ok('answering "yes" routes to the picker',
    !d.querySelector('#scene-locate').classList.contains('hide'));
@@ -161,6 +185,8 @@ ok('directions deep link built',
 ok('street view deep link built', d.querySelector('#btnPano').href.includes('map_action=pano'));
 ok('provenance names the state layer', /State of Michigan/.test(d.querySelector('#prov').textContent));
 ok('provenance prints the precinct code', /\d{13}/.test(d.querySelector('#prov').textContent));
+ok('upcoming deadlines sit beside the polling place', d.querySelectorAll('#rDates li').length >= 3 &&
+   d.querySelectorAll('#rDates li.past').length === 0);
 
 const abbot = data.dorms.find(x => x.s === 'MSU' && /^Abbot Hall/i.test(x.n));
 ok('Abbot Hall resolves to precinct 0652412000010', abbot.p === '0652412000010', abbot.p);
