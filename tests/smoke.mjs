@@ -18,11 +18,22 @@ console.log('\n4 Michigan Polling Locator, smoke test\n');
 /* ------------------------------------------------------------- 1 the data */
 console.log('data');
 const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/dorms.json'), 'utf8'));
+const geo  = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/precincts-geo.json'), 'utf8'));
 ok('dorms.json parses', !!data);
 ok('has schools, dorms, precincts', !!(data.schools && data.dorms && data.precincts));
 ok('29 schools', data.schools.length === 29, 'got ' + data.schools.length);
 ok('736 buildings', data.dorms.length === 736, 'got ' + data.dorms.length);
-ok('149 precincts', Object.keys(data.precincts).length === 149);
+ok('151 precincts, the 149 student precincts plus the two the building fixes needed', Object.keys(data.precincts).length === 151, 'got ' + Object.keys(data.precincts).length);
+ok('every building points at a precinct we carry', data.dorms.every(x => data.precincts[x.p]));
+ok('every precinct has a polygon', Object.keys(data.precincts).every(c => geo.features.some(f => f.properties.code === c)));
+const landmark = data.dorms.find(x => /^Landmark on Grand River/.test(x.n));
+ok('Landmark on Grand River sits in East Lansing, not Williamston', landmark && landmark.c === 'East Lansing' && landmark.p === '0652412000006' && landmark.fix === 1, landmark && landmark.c);
+const greatOaks = data.dorms.find(x => /^Great Oaks Apartments/.test(x.n));
+ok('Great Oaks Apartments sits in the City of Rochester, not Ortonville', greatOaks && greatOaks.p === '1256902000001' && /MUNICIPAL/.test(data.precincts[greatOaks.p].poll.name));
+const meadow = data.dorms.find(x => /^Meadowbrooke/.test(x.n));
+ok('Meadowbrooke sits in Cascade Charter Township', meadow && meadow.p === '0811366000005' && /Verdure/.test(meadow.a));
+ok('the seven Aquinas halls without addresses are pinned to the campus in Grand Rapids Ward 2 Precinct 21',
+   data.dorms.filter(x => x.s === 'Aquinas' && x.fix).length === 7 && data.dorms.filter(x => x.s === 'Aquinas').every(x => x.p === '0813400002021'));
 
 const orphan = data.dorms.filter(d => !data.precincts[d.p]);
 ok('every building maps to a known precinct', orphan.length === 0, orphan.length + ' orphaned');
@@ -58,7 +69,6 @@ for (const [f, txt] of sources) ok(f + ' carries no emoji', !emoji.test(txt));
 console.log('\npage');
 const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const js   = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
-const geo  = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/precincts-geo.json'), 'utf8'));
 
 const dom = new JSDOM(html.replace(/<script src="https:\/\/cdnjs[^<]*<\/script>/, '')
                           .replace(/<script src="app\.js[^"]*"><\/script>/, ''),
@@ -212,7 +222,16 @@ ok('every early voting precinct on file has named, addressed sites and a confirm
 ok('early voting keys are 13 digit precinct ids known to the dorm data',
    Object.keys(ev.precincts).every(k => /^\d{13}$/.test(k) && data.precincts[k]));
 const evCovered = data.dorms.filter(x => ev.precincts[x.p]).length;
-ok('early voting covers most student buildings', evCovered / data.dorms.length >= 0.8, evCovered + ' of ' + data.dorms.length);
+ok('early voting covers all but a handful of student buildings', data.dorms.length - evCovered <= 5, evCovered + ' of ' + data.dorms.length);
+const evAll = Object.values(ev.precincts);
+ok('inherited entries say so, and from how many rows', evAll.filter(e => e.inherited).every(e => /inherited from \d+ confirmed row/.test(e.by)) && evAll.some(e => e.inherited));
+ok('every early voting address names the state', evAll.every(e => e.sites.every(x => /\b(MI|Michigan)\b/.test(x.addr))));
+ok('hours and dates read as prose, no leftover sheet artefacts',
+   evAll.every(e => e.sites.every(x => !/&#|\\|\bAM\b|\bPM\b|a\.m|p\.m|\d{1,2}\/\d{1,2}/.test(x.hours + ' ' + x.dates))));
+ok('the two Houghton County precincts carry the countywide HoCo Arena site from the clerk notice',
+   ['0613630000001', '0616554000002'].every(c => ev.precincts[c] && /HoCo Arena/.test(ev.precincts[c].sites[0].name) && /notice/.test(ev.precincts[c].by)));
+ok('Allendale carries the verified township hall address, not the dragged down one',
+   Object.entries(ev.precincts).filter(([c]) => /Allendale/.test(data.precincts[c].name)).every(([c, e]) => /6676 Lake Michigan/.test(e.sites[0].addr)));
 ok('held and unmatched precincts stay off the page',
    Object.keys(ev._held).every(k => !ev.precincts[k]) && Object.keys(ev._no_row_in_sheet.precincts).every(k => !ev.precincts[k]));
 ok('early voting file carries no dashes or emoji',
@@ -234,6 +253,12 @@ w.__locator.renderEarly(abbot.p);
 ok('with sites on file the title stops quoting the statewide window and the body names it instead',
    /Your early voting sites/.test(d.querySelector('#evTitle').textContent) && /October 24 to November 1/.test(d.querySelector('#evBody').textContent));
 w.__locator.renderEarly(abbot.p);
+
+/* a corrected pin says so in the provenance line */
+w.__locator.pickDorm(landmark.i);
+ok('a hand corrected pin is disclosed in the provenance line', /corrected by hand/.test(d.querySelector('#prov').textContent));
+ok('and it resolves to Edgewood Church on Hagadorn', /Edgewood Church/i.test(d.querySelector('#pollName').textContent), d.querySelector('#pollName').textContent);
+w.__locator.pickDorm(abbot.i);
 
 ok('Abbot Hall resolves to precinct 0652412000010', abbot.p === '0652412000010', abbot.p);
 ok('that precinct votes at the Union building',

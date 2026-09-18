@@ -425,7 +425,7 @@ function pickDorm(i) {
     name: d.n,
     addr: [d.a, d.c, d.z && 'MI ' + d.z].filter(Boolean).join(', ') || d.c,
     lat: d.lat, lng: d.lng, precinct: d.p,
-    approx: !!d.approx, chk: d.chk || 0, dorm: true, school: d.s,
+    approx: !!d.approx, chk: d.chk || 0, fix: !!d.fix, dorm: true, school: d.s,
   };
   showResult();
 }
@@ -567,7 +567,8 @@ function showResult() {
 
   $('#prov').innerHTML =
     '<svg class="chk" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>' +
-    '<div><b>How we know this.</b> Your building address comes from the 4 Michigan turf record. ' +
+    '<div><b>How we know this.</b> Your building address comes from the 4 Michigan turf record' +
+    (o.fix ? ', with the pin corrected by hand after a rooftop geocode of the real address placed it elsewhere. ' : '. ') +
     'The precinct and its polling place come from the State of Michigan published 2026 precinct layer, ' +
     'snapshot <code>' + esc(state.data.meta.snapshot || state.data.meta.built) + '</code>. ' +
     'Precinct code <code>' + esc(o.precinct) + '</code>.' +

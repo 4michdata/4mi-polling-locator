@@ -43,8 +43,33 @@ carried all four. This page ships a public safe subset of it: the voter counts
 that VotePro renders (`reg`, `active`, `youth`, `youth_pct`) are stripped at
 build time, and the smoke test fails if they ever reappear.
 
-Coverage as built: 29 campuses, 736 buildings, 149 precincts, and a named,
-geocoded polling place for 736 of 736 buildings.
+Coverage as built: 29 campuses, 736 buildings, 151 precincts (the 149 student
+housing precincts plus two that the building corrections below needed), and a
+named, geocoded polling place for 736 of 736 buildings.
+
+## Ten buildings the turf record had in the wrong place
+
+Reading the early voting sheet against the turf record exposed five rows whose
+precinct id and precinct name disagreed. Chasing them found ten buildings whose
+turf geocode had landed miles from the building, consistently enough that the
+point in polygon check could not catch it (a wrong pin inside the wrong precinct
+still agrees with itself):
+
+| Building | Turf record said | Actually |
+|---|---|---|
+| Landmark on Grand River (MSU) | Williamstown Township, 15 miles east | 205 E Grand River Ave, East Lansing, Precinct 6 |
+| Great Oaks Apartments (OU) | Ortonville, 22 miles north | 940 Oakwood Dr, City of Rochester, Precinct 1 |
+| Meadowbrooke Apartment Homes (Davenport) | Grand Rapids Charter Township | Cascade Charter Township, Precinct 5 (street misspelled) |
+| Seven Aquinas halls with no street address | East Grand Rapids | Aquinas College campus, Grand Rapids Ward 2, Precinct 21 |
+
+Each correction was triangulated three ways before it was written: a rooftop
+geocode of the real address, that point dropped into the State of Michigan 2026
+precinct layer, and the precinct the crosswalk sheet itself names. They live in
+`build/building_fixes.json` with the evidence, `build/apply_fixes.py` applies
+them after `build_data.py`, and the page discloses a corrected pin in its
+provenance line. Every one of them is also a defect in the Master Turf Tracker;
+`build/turf_record_corrections.csv` is the list for whoever owns it. Fix it
+upstream and delete the entry.
 
 ## The second opinion
 
@@ -71,38 +96,56 @@ the page carries its own table, `data/early-voting.json`, keyed by precinct id
 and built from the program's clerk confirmed crosswalk sheet
 (`4MI_Turf_Precinct_Crosswalk_Validation_Draft2`, EV tab).
 
-    python3 build/build_early.py build/ev_tab.json data/dorms.json data/early-voting.json build/ev_overrides.json
+    npm run early    # build/build_early.py over the sheet extract, the overrides and the clerk notices
 
 Rules the build enforces, and the page and tests re-enforce:
 
 - only rows with Clerk Confirmed = Yes are read; everything else is ignored
-- a precinct is written only when every site name pairs with an address;
-  anything the script cannot pair goes to `_held` with the reason
-- two confirmed rows for the same precinct that disagree are held, not merged
+- sites are designated per city or township and serve every voter in it, so
+  rows are pooled by jurisdiction (the precinct NAME, since five sheet rows
+  carry a precinct id that belongs to a different jurisdiction), and a precinct
+  with no row of its own inherits its jurisdiction's sites when every confirmed
+  row for that jurisdiction names the same addresses (`inherited: true`, and
+  `by` says from how many rows)
+- rows that disagree, or that cannot be paired name for name with an address,
+  hold the whole jurisdiction in `_held` and stay off the page
+- a row whose address cell holds no street number (columns shifted) is skipped
 - multi site cities (Ann Arbor, East Lansing, Kalamazoo, Detroit, Grand Rapids,
-  Midland) were typed free form in the sheet, so `build/ev_overrides.json`
-  carries them hand read, and wins over the parser for those jurisdictions
+  Midland, Lansing, Royal Oak, the Clinton County pair) were typed free form,
+  and two address cells were dragged down so the street number auto
+  incremented (Allendale 6676 to 6679, Auburn Hills 1899 to 1901; the first row
+  is the real one, verified on the county and city sites). `build/ev_overrides.json`
+  carries all of these hand read, and wins over the parser
+- `build/ev_extra.json` fills jurisdictions the sheet has no row for from the
+  clerk's own published notice, each entry citing it (Houghton County's
+  countywide HoCo Arena site, from the City of Hancock election page)
 - the page will not render a site without a `confirmed` date, and sorts
   on campus sites (`campus: true`) first
 
-Coverage as built: 118 precincts live, 644 of 736 buildings, 1 held (East
-Lansing 9, two confirmed rows disagree), 30 precincts with no row in the sheet
-yet. `_no_row_in_sheet` in the file is the list for the next clerk round; a
-student in one of those precincts sees the window and the state lookup only.
+Coverage as built: 145 of the 147 precincts that carry a building, 734 of 736
+buildings, 0 held. Still open: Peninsula Township (one NWMC building; the
+township shares an East Bay Township site with four neighbours but has posted
+only the August arrangement) and the City of Trenton (one WSU building; the
+city site blocks automated reading). One row worth a phone call: the sheet's
+City of Houghton row names First Apostolic Lutheran Church, while the City of
+Hancock notice and two newspapers describe HoCo Arena in Hancock as the single
+countywide site for November. The sheet row ships, as the program's own
+confirmation, flagged in `build/ev_clerk_followup.csv`.
 
 `build/ev_tab.json` is the sheet extract with the working notes column
 removed. Refresh it from the sheet, rerun the build, rerun the tests.
 
 ## Rebuilding the data
 
-    npm run data     # build, fill municipalities, validate
-    npm test         # 105 checks, no network needed
+    npm run data     # build, fill municipalities, apply building fixes, validate, early voting
+    npm test         # 119 checks, no network needed
 
 `build/build_data.py` joins the upstream file to the turf tracker.
 `build/fill_city.py` reverse geocodes the buildings whose municipality the turf
 record never carried, against the US Census geocoder, and caches the answers in
-`build/city_cache.json` so the step is not repeated. `build/validate.py` runs
-the point in polygon second opinion and writes the disagreement report.
+`build/city_cache.json` so the step is not repeated. `build/apply_fixes.py`
+applies the building corrections. `build/validate.py` runs the point in
+polygon second opinion and writes the disagreement report.
 
 ## Deliberate choices worth knowing before you change something
 
@@ -151,8 +194,8 @@ for this audience.
     app.js                            all behaviour
     styles.css                        4mich.org brand tokens
     data/dorms.json                   campuses, buildings, precincts, polls
-    data/precincts-geo.json           149 polygons, lazy loaded for typed addresses
+    data/precincts-geo.json           151 polygons, lazy loaded for typed addresses
     data/guide.json                   student voting guide copy and the four dates
     data/early-voting.json            clerk confirmed early voting sites by precinct
     build/                            the data pipeline, the early voting build and caches
-    tests/smoke.mjs                   105 checks including house style and privacy
+    tests/smoke.mjs                   119 checks including house style and privacy

@@ -1,0 +1,33 @@
+{
+ "_readme": [
+  "Jurisdictions the crosswalk sheet has no row for, filled from the clerk's own published notice for the",
+  "November 3, 2026 election. Each entry cites the notice. The page shows these with the same confirmation",
+  "stamp; the by field carries the source. Delete an entry the moment the sheet gains a clerk confirmed row."
+ ],
+ "City of Hancock": {
+  "sites": [
+   {
+    "name": "HoCo Arena",
+    "addr": "1500 Birch St, Hancock, MI 49930",
+    "hours": "8 am to 4 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null,
+  "confirmed": "2026-09-18",
+  "by": "City of Hancock election notice (cityofhancock.com/info-election.php): countywide Houghton County early voting site for the August and November 2026 elections"
+ },
+ "Portage Township": {
+  "sites": [
+   {
+    "name": "HoCo Arena",
+    "addr": "1500 Birch St, Hancock, MI 49930",
+    "hours": "8 am to 4 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null,
+  "confirmed": "2026-09-18",
+  "by": "City of Hancock election notice (cityofhancock.com/info-election.php): countywide Houghton County early voting site for the August and November 2026 elections"
+ }
+}

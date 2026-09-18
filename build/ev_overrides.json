@@ -1,5 +1,5 @@
 {
- "_readme": "Hand read from the clerk confirmed cells for cities whose sheet rows hold several sites in one cell. Keyed by jurisdiction as the precinct name spells it. Edit here, rebuild, done.",
+ "_readme": "Hand read from the clerk confirmed cells for cities whose sheet rows hold several sites in one cell, whose hours were typed day by day, or whose address cell was dragged down in the sheet so the street number auto incremented (Allendale 6676 to 6679, Auburn Hills 1899 to 1901; the first row is the real one, verified on the Ottawa County and City of Auburn Hills sites). Keyed by jurisdiction as the precinct name spells it. Edit here, rebuild, done.",
  "City of Ann Arbor": {
   "sites": [
    {
@@ -253,6 +253,166 @@
     "addr": "130 Delaware St SW, Grand Rapids, MI",
     "hours": "9 am to 5 pm most days; 11 am to 7 pm on October 20, 22, 27 and 29; 7 am to 3 pm on Saturday October 31",
     "dates": "October 20 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "Allendale Township": {
+  "sites": [
+   {
+    "name": "Allendale Township Hall",
+    "addr": "6676 Lake Michigan Dr, Allendale, MI 49401",
+    "hours": "8 am to 4 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": {
+   "where": "Clerk satellite office on campus at the Russel H. Kirkhof Center, 1 Campus Drive, October 28 to 30, 10 am to 2 pm, for Allendale Township voters only.",
+   "hours": ""
+  }
+ },
+ "City of Auburn Hills": {
+  "sites": [
+   {
+    "name": "Public Safety Building, Community Room",
+    "addr": "1899 N Squirrel Rd, Auburn Hills, MI 48326",
+    "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Rochester": {
+  "sites": [
+   {
+    "name": "Rochester Municipal Building",
+    "addr": "400 Sixth St, Rochester, MI 48307",
+    "hours": "9 am to 5 pm, and noon to 8 pm on Thursday October 29",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Rochester Hills": {
+  "sites": [
+   {
+    "name": "Rochester Hills Public Library",
+    "addr": "500 Olde Towne Rd, Rochester, MI 48307",
+    "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Lansing": {
+  "sites": [
+   {
+    "name": "Lansing Elections Office",
+    "addr": "701 W Jolly Rd, Lansing, MI 48910",
+    "hours": "9 am to 5 pm, 11 am to 7 pm on Wednesday October 28, and 9 am to 4 pm on Monday November 2",
+    "dates": "October 24 to November 2"
+   },
+   {
+    "name": "Foster Community Center",
+    "addr": "200 N Foster Ave, Lansing, MI 48912",
+    "hours": "10 am to 6 pm, and 10 am to 4 pm on Monday November 2",
+    "dates": "October 24 to November 2"
+   }
+  ],
+  "satellite": {
+   "where": "Foster Community Center also serves as a clerk satellite on Election Day, 7 am to 8 pm.",
+   "hours": ""
+  }
+ },
+ "Lansing Township": {
+  "sites": [
+   {
+    "name": "Lansing Elections Office",
+    "addr": "701 W Jolly Rd, Lansing, MI 48910",
+    "hours": "9 am to 5 pm, 11 am to 7 pm on Wednesday October 28, and 9 am to 4 pm on Monday November 2",
+    "dates": "October 24 to November 2"
+   },
+   {
+    "name": "Foster Community Center",
+    "addr": "200 N Foster Ave, Lansing, MI 48912",
+    "hours": "10 am to 6 pm, and 10 am to 4 pm on Monday November 2",
+    "dates": "October 24 to November 2"
+   }
+  ],
+  "satellite": {
+   "where": "Foster Community Center also serves as a clerk satellite on Election Day, 7 am to 8 pm.",
+   "hours": ""
+  }
+ },
+ "Bath Township": {
+  "sites": [
+   {
+    "name": "DeWitt Charter Township Hall (south site)",
+    "addr": "1401 W Herbison Rd, DeWitt, MI 48820",
+    "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Bingham Township Hall (north site)",
+    "addr": "2057 N Lansing St, St Johns, MI 48879",
+    "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "De Witt Township": {
+  "sites": [
+   {
+    "name": "DeWitt Charter Township Hall (south site)",
+    "addr": "1401 W Herbison Rd, DeWitt, MI 48820",
+    "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Bingham Township Hall (north site)",
+    "addr": "2057 N Lansing St, St Johns, MI 48879",
+    "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "Saginaw Township": {
+  "sites": [
+   {
+    "name": "Saginaw County Early Voting Center",
+    "addr": "618 Cass St, Saginaw, MI 48602",
+    "hours": "9 am to 5 pm, and until 7 pm on Wednesday October 28",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "Kochville Township": {
+  "sites": [
+   {
+    "name": "Saginaw County Early Voting Center",
+    "addr": "618 Cass St, Saginaw, MI 48602",
+    "hours": "9 am to 5 pm, and until 7 pm on Wednesday October 28",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null
+ },
+ "City of Royal Oak": {
+  "sites": [
+   {
+    "name": "Mahany/Meininger Senior Center",
+    "addr": "3500 Marais Ave, Royal Oak, MI 48073",
+    "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+    "dates": "October 24 to November 1"
+   },
+   {
+    "name": "Waterford Oaks Activity Center",
+    "addr": "2800 Watkins Lake Rd, Waterford, MI 48328",
+    "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+    "dates": "October 24 to November 1"
    }
   ],
   "satellite": null

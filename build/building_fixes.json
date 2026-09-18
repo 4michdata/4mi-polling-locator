@@ -1,0 +1,255 @@
+{
+ "_readme": [
+  "Corrections to buildings whose turf record geocoded to the wrong place, each triangulated three ways before it",
+  "was written: a rooftop geocode of the real address, the point dropped into the State of Michigan 2026 precinct",
+  "layer, and the precinct the crosswalk sheet itself names for that building. build/apply_fixes.py applies them",
+  "to data/dorms.json after build_data.py, and adds the two precincts the 149 did not carry (polygons from the",
+  "state layer, polling places from the VAN polling location table, which matches the crosswalk sheet's Election",
+  "Day column). Every fix here is also a defect in the Master Turf Tracker; fix it there and delete the entry."
+ ],
+ "fixes": [
+  {
+   "i": 224,
+   "n": "Landmark on Grand River Apartments",
+   "school": "MSU",
+   "set": {
+    "a": "205 E Grand River Ave",
+    "c": "East Lansing",
+    "z": "48823",
+    "lat": 42.734988,
+    "lng": -84.482593,
+    "p": "0652412000006"
+   },
+   "was": {
+    "c": "Williamstown",
+    "lat": 42.70676,
+    "lng": -84.35502,
+    "p": "0658744000001",
+    "a": "205 E Grand River"
+   },
+   "why": "the turf address has no city, and the geocoder chose E Grand River Ave in Williamston, 15 miles east; this is the student high rise across from campus",
+   "evidence": "US Census geocoder point match; state 2026 precinct layer; crosswalk sheet EV tab names City of East Lansing, Precinct 6"
+  },
+  {
+   "i": 399,
+   "n": "Great Oaks Apartments",
+   "school": "OU",
+   "set": {
+    "a": "940 Oakwood Dr",
+    "c": "Rochester",
+    "z": "48307",
+    "lat": 42.683651,
+    "lng": -83.146432,
+    "p": "1256902000001"
+   },
+   "was": {
+    "a": "940 Oakwood Road",
+    "c": "Ortonville",
+    "lat": 42.85086,
+    "lng": -83.44046,
+    "p": "1251004000006"
+   },
+   "why": "the turf address has no city, and the geocoder chose Oakwood Road in Ortonville, 22 miles away (crosswalk flag on turf 04-1107); the complex is Great Oaks Apartments, 940 Oakwood Dr, Rochester",
+   "evidence": "Esri and US Census rooftop match; state 2026 precinct layer; crosswalk sheet EV tab names City of Rochester, Precinct 1"
+  },
+  {
+   "i": 334,
+   "n": "Meadowbrooke Apartment Homes",
+   "school": "Davenport",
+   "set": {
+    "a": "5012 Verdure Pkwy SE",
+    "c": "Grand Rapids",
+    "z": "49512",
+    "lat": 42.858649,
+    "lng": -85.541985,
+    "p": "0811366000005"
+   },
+   "was": {
+    "a": "5012 Verdre Parkway",
+    "lat": 42.98285,
+    "lng": -85.57351,
+    "p": "0813402000001"
+   },
+   "why": "the street was misspelled in the turf record, so the geocode fell 9 miles north in Grand Rapids Charter Township; the complex is in Cascade Charter Township",
+   "evidence": "Esri rooftop match on the corrected spelling; state 2026 precinct layer puts it in Cascade Charter Township, Precinct 5 (the sheet's Cascade row says Precinct 4, 2.2 miles off; the layer wins)"
+  },
+  {
+   "i": 321,
+   "n": "Woodcock Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "lat": 42.94996,
+    "lng": -85.60836,
+    "p": "0812398001001",
+    "a": "Woodcock Hall Grand Rapids"
+   },
+   "why": "no street address on the turf record, and the fallback pin landed a mile east of campus inside East Grand Rapids; pinned to the Aquinas College campus, 1700 Fulton St E",
+   "evidence": "state 2026 precinct layer at the campus address; crosswalk sheet EV tab names City of Grand Rapids, Ward 2, Precinct 21; the four Aquinas halls with real addresses already sit in that precinct"
+  },
+  {
+   "i": 322,
+   "n": "Knap Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "lat": 42.94996,
+    "lng": -85.60836,
+    "p": "0812398001001",
+    "a": "Knap Hall Grand Rapids"
+   },
+   "why": "same as Woodcock Hall",
+   "evidence": "same as Woodcock Hall"
+  },
+  {
+   "i": 323,
+   "n": "Sister Mildred Hawkins Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "c": "East Grand Rapids",
+    "lat": 42.95972,
+    "lng": -85.60581,
+    "p": "0812398001001",
+    "a": "N/a"
+   },
+   "why": "same as Woodcock Hall",
+   "evidence": "same as Woodcock Hall"
+  },
+  {
+   "i": 324,
+   "n": "Ruth Rasmus Eberhard Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "c": "East Grand Rapids",
+    "lat": 42.95972,
+    "lng": -85.60581,
+    "p": "0812398001001",
+    "a": "N/a"
+   },
+   "why": "same as Woodcock Hall",
+   "evidence": "same as Woodcock Hall"
+  },
+  {
+   "i": 325,
+   "n": "St. Catherine of Siena Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "c": "East Grand Rapids",
+    "lat": 42.95972,
+    "lng": -85.60581,
+    "p": "0812398001001",
+    "a": "N/a"
+   },
+   "why": "same as Woodcock Hall",
+   "evidence": "same as Woodcock Hall"
+  },
+  {
+   "i": 326,
+   "n": "St. Martin de Porres Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "c": "East Grand Rapids",
+    "lat": 42.95972,
+    "lng": -85.60581,
+    "p": "0812398001001",
+    "a": "N/a"
+   },
+   "why": "same as Woodcock Hall",
+   "evidence": "same as Woodcock Hall"
+  },
+  {
+   "i": 327,
+   "n": "St. Rose of Lima Hall",
+   "school": "Aquinas",
+   "set": {
+    "c": "Grand Rapids",
+    "z": "49506",
+    "lat": 42.96065,
+    "lng": -85.6253,
+    "p": "0813400002021",
+    "a": "1700 Fulton St E"
+   },
+   "was": {
+    "c": "East Grand Rapids",
+    "lat": 42.95972,
+    "lng": -85.60581,
+    "p": "0812398001001",
+    "a": "N/a"
+   },
+   "why": "same as Woodcock Hall",
+   "evidence": "same as Woodcock Hall"
+  }
+ ],
+ "precincts": {
+  "1256902000001": {
+   "name": "City of Rochester, Precinct 1",
+   "county": "Oakland",
+   "poll": {
+    "name": "MUNICIPAL BUILDING",
+    "addr": "400 6th St",
+    "city": "Rochester",
+    "lat": 42.678049,
+    "lng": -83.14339
+   },
+   "source": "VAN polling location table (mi_van.pollinglocations), same building the crosswalk sheet lists for Election Day"
+  },
+  "0811366000005": {
+   "name": "Cascade Charter Township, Precinct 5",
+   "county": "Kent",
+   "poll": {
+    "name": "THORNAPPLE COMMUNITY CHURCH",
+    "addr": "3260 Thornapple River Dr SE",
+    "city": "Grand Rapids",
+    "lat": 42.904749,
+    "lng": -85.508333
+   },
+   "source": "VAN polling location table (mi_van.pollinglocations)"
+  }
+ }
+}

@@ -4,7 +4,8 @@
   "private": true,
   "description": "Public student facing polling place locator for 4 Michigan",
   "scripts": {
-    "data": "python3 build/build_data.py && python3 build/fill_city.py && python3 build/validate.py",
-    "test": "node tests/smoke.mjs"
+    "data": "python3 build/build_data.py && python3 build/fill_city.py && python3 build/apply_fixes.py && python3 build/validate.py && npm run early",
+    "test": "node tests/smoke.mjs",
+    "early": "python3 build/build_early.py build/ev_tab.json data/dorms.json data/early-voting.json build/ev_overrides.json build/ev_extra.json"
   }
 }

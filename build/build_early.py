@@ -8,9 +8,16 @@ seen, refuses anything it cannot pair name for name with address, and writes tho
 precincts to _held so they stay off the page until a person fixes the sheet.
 
 Inputs : ev_tab.json  (the tab, exported row by row)   dorms.json (the 149 precincts)
+         ev_overrides.json (hand read multi site cities)   ev_extra.json (optional, sites
+         confirmed from the clerk's own published notice for jurisdictions the sheet lacks)
 Output : early-voting.json
+
+Early voting sites are designated per city or township and serve every voter of
+that jurisdiction, so a precinct with no row of its own inherits the sites of its
+jurisdiction when every confirmed row for that jurisdiction names the same
+addresses. Rows that disagree hold the whole jurisdiction.
 """
-import json, re, sys, collections
+import json, re, sys, collections, html
 
 recs = json.load(open(sys.argv[1]))
 OVERRIDES = json.load(open(sys.argv[4])) if len(sys.argv) > 4 else {}
@@ -18,15 +25,51 @@ d    = json.load(open(sys.argv[2]))
 prec = d['precincts']
 
 def norm_id(s): s = re.sub(r'\D', '', s or ''); return s.zfill(13) if s else ''
-def sq(s): return re.sub(r'\s+', ' ', (s or '')).strip()
+def sq(s): return re.sub(r'\s+', ' ', html.unescape(s or '').replace('\r', ' ')).strip()
 def clean(s):
     s = re.sub(r'\s*[‐-―−]\s*', ' to ', s or '')
     s = re.sub(r'(\w+ \d{1,2}(?:st|nd|rd|th)?)\s*-\s*(\w+ \d{1,2})', r'\1 to \2', s)
     s = re.sub(r'(\d{1,2})\s*-\s*(\d{1,2})', r'\1 to \2', s)
     s = re.sub(r'\ba\.m\.', 'am', s); s = re.sub(r'\bp\.?\.?m\.', 'pm', s); s = re.sub(r'p\.\.m\.', 'pm', s)
+    s = re.sub(r'\b([ap])\.m\b\.?', r'\1m', s, flags=re.I)          # a.m / p.m with or without the last period
+    s = re.sub(r'(\d):(\d\d):00\b', r'\1:\2', s)                       # 8:30:00 -> 8:30
+    s = re.sub(r'(?<=[\d ])(AM|PM|Am|Pm)\b', lambda m: m.group(1).lower(), s)
+    s = re.sub(r',? ?2026\b', '', s)                                       # the year adds nothing inside an hours cell
+    s = s.replace('\\', '')
     s = re.sub(r'(\d)(am|pm)\b', r'\1 \2', s)
     s = re.sub(r'(\d):00 ?(am|pm)', r'\1 \2', s)
+    s = re.sub(r'(am|pm)\s*-\s*(?=\d)', r'\1 to ', s)                    # 8 am - 4 pm -> 8 am to 4 pm
+    s = re.sub(r'(\d)\s*-\s*(?=\d{1,2}(:\d\d)? ?(am|pm))', r'\1 to ', s)
+    s = re.sub(r'(\d ?(?:am|pm)\.?)\s+(?=(?:Saturday|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|October|November|Oct|Nov)\b)', r'\1; ', s)
+    s = re.sub(r'\s-\s', ' to ', s)                                        # a spaced hyphen between two days or dates
     return sq(s)
+
+CITY_FIX = {'caledonia township': 'Caledonia, MI 49316', 'summit township': 'Jackson, MI 49203', 'livonia': 'Livonia, MI 48154'}
+
+MONTHS = {'10': 'October', '11': 'November'}
+def norm_dates(s):
+    """'10/24-11/1', '10/24/11/1', 'Saturday, October 24 - Sunday, November 1', 'October 24 - November 1, 2026' -> 'October 24 to November 1'"""
+    t = sq(s)
+    m = re.search(r'\b(1[01])/(\d{1,2})\D+?(1[01])/(\d{1,2})\b', t)
+    if m: return f"{MONTHS[m.group(1)]} {int(m.group(2))} to {MONTHS[m.group(3)]} {int(m.group(4))}"
+    m = re.search(r'(October|November)\s+(\d{1,2})(?:st|nd|rd|th)?\D+?(October|November)\s+(\d{1,2})(?:st|nd|rd|th)?', t)
+    if m: return f"{m.group(1)} {int(m.group(2))} to {m.group(3)} {int(m.group(4))}"
+    return clean(t)
+
+def tidy_site(x, j=None):
+    name, addr = sq(x['name']), sq(x['addr']).replace('\\', '')
+    # the name cell sometimes carries the address too (Houghton), and the address cell sometimes repeats the name (Big Rapids Twp)
+    if addr and addr.lower() in name.lower():
+        name = sq(name.lower().replace(addr.lower(), '')).strip(' ,')
+        name = ' '.join(w if w.isupper() and len(w) > 3 else w.capitalize() for w in name.split()) if name.islower() else sq(x['name']).split(addr)[0].strip(' ,')
+    if name and addr.lower().startswith(name.lower()):
+        addr = addr[len(name):].strip(' ,')
+    name = re.sub(r',?\s*\d{2,5} [A-Z][A-Za-z\.]* (?:Ave|Rd|St|Dr|Blvd)\.?.*$', '', name).strip(' ,') or name
+    if not re.search(r'\b(MI|Michigan)\b', addr):
+        addr = re.sub(r'\.?,?\s*\d{5}$', '', addr).rstrip('.') + ', ' + CITY_FIX.get(j or '', 'Michigan')
+    if name.isupper(): name = ' '.join(w.capitalize() if len(w) > 2 else w for w in name.split())
+    if addr.isupper(): addr = ' '.join(w if re.match(r'^(MI|[NSEW]{1,2}|\d+)$', w.strip(',.')) else (w.lower() if re.match(r'^\d+(ST|ND|RD|TH)$', w) else w.capitalize()) for w in addr.split())
+    return {"name": name, "addr": addr, "hours": clean(x['hours']), "dates": norm_dates(x['dates'])}
 
 STREET = r'(?:Road|Rd|Street|St|Avenue|Ave|Drive|Dr|Boulevard|Blvd|Lane|Ln|Way|Court|Ct|Hwy|Highway|Trail|Trl|Pkwy|Parkway|Circle|Cir|Place|Pl|Square|Sq|Lyndon|Conner)'
 # an address ends at a Michigan ZIP, 5 digits, or 4 when the sheet truncated it at the cell edge
@@ -75,7 +118,7 @@ def parse(r):
              'Malletts Creek Library', 'Westgate Library',
              'WKAR Studio A (Communication Arts and Sciences Building)', 'East Lansing Hannah Community Center',
              'Douglass Community Association', 'Kalamazoo County Expo Center', 'Fetzer Center at WMU',
-             'Portage Parks & Recreation Department']
+             'Portage Parks & Recreation Department', 'Ypsilanti Township Civic Center', 'Ypsilanti Township Community Center']
     names, rest = [], name
     progress = True
     while rest and progress:
@@ -109,51 +152,109 @@ def satellite(r):
     return {"where": clean(re.sub(r'^Yes:?\s*', '', where)), "hours": clean(hrs) if hrs != where else ''}
 
 # ---- assemble
-by_id = {}
-for r in recs:
+EXTRA = json.load(open(sys.argv[5])) if len(sys.argv) > 5 else {}
+
+def jname(n):
+    """'City of Rochester Hills, District 4, Precinct 20' -> 'rochester hills'; 'City of Houghton Precinct 2' -> 'houghton'."""
+    j = re.split(r',? (Precinct|Ward|District)\b', n or '')[0].strip().lower()
+    j = re.sub(r'^city of ', '', j)
+    j = re.sub(r'^charter township of (.+)$', r'\1 township', j)
+    j = re.sub(r'\bcharter township\b', 'township', j)
+    return re.sub(r'\s+', ' ', j)
+
+def sig(sites):
+    """address signature: street number plus the first street word, so a floor or a typo in the name is not a disagreement"""
+    out = set()
+    for x in sites:
+        m = re.search(r'(\d{2,5})[A-Za-z]? +([A-Za-z]+)', x['addr'] or '')
+        out.add((m.group(1) + ' ' + m.group(2).lower()) if m else sq(x['name']).lower())
+    return frozenset(out)
+
+confirmed = [r for r in recs if re.search(r'^\s*yes', r['confirmed'] or '', re.I)]
+by_j = collections.defaultdict(list)
+for r in confirmed: by_j[jname(r['pname'])].append(r)
+own = collections.defaultdict(list)           # rows that carry a dorm precinct's own id
+for r in confirmed:
     c = norm_id(r['pid'])
-    if c and re.search(r'^\s*yes', r['confirmed'], re.I): by_id.setdefault(c, r)
-# Marquette 1: two confirmed rows, same library, one names the floor. Take the fuller one.
-mq = [r for r in recs if norm_id(r['pid']) == '1035190000001']
-if mq: by_id['1035190000001'] = max(mq, key=lambda r: len(r['ev_name']))
+    if c in prec and jname(prec[c]['name']) == jname(r['pname']): own[c].append(r)
+
+def display_name(code):
+    return re.split(r', (Precinct|Ward|District)\b', prec[code]['name'])[0].strip()
+
+canon, held_j, skipped = {}, {}, []
+for key, o in OVERRIDES.items():
+    if key.startswith('_'): continue
+    canon[jname(key)] = {"sites": o['sites'], "satellite": o.get('satellite'), "rows": len(by_j.get(jname(key), [])), "how": "hand read"}
+for j, rs in by_j.items():
+    if j in canon: continue
+    usable = [r for r in rs if re.search(r'\d', r['ev_addr'] or '')]
+    for r in rs:
+        if r not in usable: skipped.append((r['pname'], 'address cell holds no street number, columns shifted'))
+    if not usable:
+        held_j[j] = "no row carries a street address: " + sq(rs[0]['ev_name'])[:120]; continue
+    parsed = [(r, parse(r)) for r in usable]
+    good = [(r, ss) for r, ss in parsed if ss]
+    if not good:
+        held_j[j] = "could not pair site names with addresses: " + sq(usable[0]['ev_name'])[:120]; continue
+    sigs = {sig(ss) for r, ss in good}
+    if len(sigs) > 1:
+        held_j[j] = "confirmed rows disagree: " + ' / '.join(sorted({sq(r['ev_addr']).lower()[:50] for r, ss in good}))[:160]; continue
+    # the name most rows use wins; a tie goes to the fullest (Marquette names the floor on one of two rows)
+    names = collections.Counter(sq(r['ev_name']) for r, ss in good)
+    top = max(names.values())
+    pick = max((r for r, ss in good if names[sq(r['ev_name'])] == top), key=lambda r: len(r['ev_name'] or ''))
+    ss = next(ss for r, ss in good if r is pick)
+    canon[j] = {"sites": [tidy_site(x, j) for x in ss], "satellite": satellite(pick), "rows": len(rs), "how": "parsed"}
+
+for key, e in EXTRA.items():
+    if key.startswith('_') or jname(key) in canon: continue
+    canon[jname(key)] = {"sites": e['sites'], "satellite": e.get('satellite'), "rows": 0, "how": "clerk notice", "by": e['by'], "confirmed": e['confirmed']}
 
 out = {"_readme": [
   "Early voting sites for the November 3, 2026 general election, keyed by 4MI precinct id.",
-  "Source: 4MI_Turf_Precinct_Crosswalk_Validation_Draft2, EV tab, Clerk Confirmed = Yes rows only.",
-  "Built by build/build_early.py. A precinct is written only when every site name pairs with an",
-  "address; anything the script cannot pair goes to _held with the reason and stays off the page.",
-  "Multi site cities (Ann Arbor, East Lansing, Kalamazoo, Detroit) were typed free form in the",
-  "sheet; the parser knows those shapes. A new shape lands in _held, which is the correct outcome."],
+  "Source: 4MI_Turf_Precinct_Crosswalk_Validation_Draft2, EV tab, Clerk Confirmed = Yes rows only,",
+  "plus build/ev_extra.json for jurisdictions the sheet lacks, each citing the clerk's own notice.",
+  "Built by build/build_early.py. Sites are designated per city or township and serve every voter",
+  "in it, so a precinct with no row inherits its jurisdiction's sites when every confirmed row for",
+  "that jurisdiction names the same addresses (inherited: true, and by says from how many rows).",
+  "Rows that disagree, or that cannot be paired name for name with an address, hold the whole",
+  "jurisdiction in _held and stay off the page. A new sheet shape lands in _held, which is correct."],
   "window": {"start": "2026-10-24", "end": "2026-11-01"},
-  "built": "2026-09-18", "precincts": {}, "_held": {}}
+  "built": "2026-09-18", "precincts": {}, "_held": {},
+  "_no_row_in_sheet": {"_readme": "dorm precincts whose jurisdiction has no confirmed row anywhere in the sheet", "precincts": {}}}
 
-# conflicting rows for one precinct: hold unless the difference is only a floor or suite
-groups = collections.defaultdict(list)
-for r in recs:
-    c = norm_id(r['pid'])
-    if c and re.search(r'^\s*yes', r['confirmed'], re.I): groups[c].append(sq(r['ev_name']).lower())
+lived = {x['p'] for x in d['dorms']}          # precincts that actually carry a building; the rest only serve typed addresses
 for code in prec:
-    r = by_id.get(code)
-    if not r: continue
-    names = set(groups.get(code, []))
-    if len(names) > 1 and len({n.split(',')[0] for n in names}) > 1:
-        out['_held'][code] = {"name": prec[code]['name'], "reason": "confirmed rows disagree: " + ' / '.join(sorted(names))[:160]}
-        continue
-    juris = prec[code]['name'].split(', Precinct')[0].split(', Ward')[0].strip()
-    if juris in OVERRIDES:
-        o = OVERRIDES[juris]
-        out['precincts'][code] = {"sites": o['sites'], "satellite": o.get('satellite'),
-                                  "confirmed": "2026-09-18", "by": "clerk, per crosswalk sheet, hand read"}
-        continue
-    sites = parse(r)
-    if not sites:
-        out['_held'][code] = {"name": prec[code]['name'], "reason": "could not pair site names with addresses: " + sq(r['ev_name'])[:120]}
-        continue
-    out['precincts'][code] = {"sites": sites, "satellite": satellite(r), "confirmed": "2026-09-18", "by": "clerk, per crosswalk sheet"}
+    if code not in lived: continue
+    j = jname(prec[code]['name'])
+    if j in held_j:
+        out['_held'][code] = {"name": prec[code]['name'], "reason": held_j[j]}; continue
+    c = canon.get(j)
+    if not c:
+        out['_no_row_in_sheet']['precincts'][code] = prec[code]['name']; continue
+    mine = own.get(code, [])
+    entry = {"sites": c['sites'], "satellite": c['satellite'], "confirmed": c.get('confirmed', "2026-09-18")}
+    if c['how'] == 'clerk notice':
+        entry['by'] = c['by']
+    elif mine:
+        entry['by'] = "clerk, per crosswalk sheet" + (", hand read" if c['how'] == 'hand read' else "")
+        if c['how'] == 'parsed':
+            s_own = satellite(mine[0])
+            if s_own: entry['satellite'] = s_own
+    else:
+        entry['by'] = f"clerk, per crosswalk sheet, inherited from {c['rows']} confirmed row{'s' if c['rows'] != 1 else ''} for {display_name(code)}"
+        entry['inherited'] = True
+    out['precincts'][code] = entry
 
 json.dump(out, open(sys.argv[3], 'w'), indent=1)
 cov = sum(1 for x in d['dorms'] if x['p'] in out['precincts'])
-print(f"live precincts {len(out['precincts'])} of {len(prec)}   buildings covered {cov} of {len(d['dorms'])} ({cov/len(d['dorms'])*100:.0f}%)   held {len(out['_held'])}")
+inh = sum(1 for v in out['precincts'].values() if v.get('inherited'))
+print(f"live precincts {len(out['precincts'])} of {len(lived)} with buildings ({inh} inherited)   buildings covered {cov} of {len(d['dorms'])} ({cov/len(d['dorms'])*100:.0f}%)   held {len(out['_held'])}   no row {len(out['_no_row_in_sheet']['precincts'])}")
 for k, v in out['_held'].items(): print('   held', k, v['name'], '|', v['reason'][:110])
-multi = [(c, v) for c, v in out['precincts'].items() if len(v['sites']) > 1]
-print(f"multi site precincts {len(multi)}; sites with a blank name: {sum(1 for c,v in out['precincts'].items() for s in v['sites'] if not s['name'])}")
+for k, v in out['_no_row_in_sheet']['precincts'].items(): print('   no row', k, v)
+for pn, why in skipped: print('   skipped row', pn, '|', why)
+print(f"sites with a blank name or address: {sum(1 for v in out['precincts'].values() for s in v['sites'] if not s['name'] or not s['addr'])}")
+if '--table' in sys.argv:
+    for j in sorted(canon):
+        c = canon[j]
+        print(f"{j:28s} {c['how']:12s} rows {c['rows']:2d} | " + ' || '.join(f"{x['name']} @ {x['addr']} | {x['hours']} | {x['dates']}" for x in c['sites'])[:260])

@@ -1,11 +1,13 @@
 {
  "_readme": [
   "Early voting sites for the November 3, 2026 general election, keyed by 4MI precinct id.",
-  "Source: 4MI_Turf_Precinct_Crosswalk_Validation_Draft2, EV tab, Clerk Confirmed = Yes rows only.",
-  "Built by build/build_early.py. A precinct is written only when every site name pairs with an",
-  "address; anything the script cannot pair goes to _held with the reason and stays off the page.",
-  "Multi site cities (Ann Arbor, East Lansing, Kalamazoo, Detroit) were typed free form in the",
-  "sheet; the parser knows those shapes. A new shape lands in _held, which is the correct outcome."
+  "Source: 4MI_Turf_Precinct_Crosswalk_Validation_Draft2, EV tab, Clerk Confirmed = Yes rows only,",
+  "plus build/ev_extra.json for jurisdictions the sheet lacks, each citing the clerk's own notice.",
+  "Built by build/build_early.py. Sites are designated per city or township and serve every voter",
+  "in it, so a precinct with no row inherits its jurisdiction's sites when every confirmed row for",
+  "that jurisdiction names the same addresses (inherited: true, and by says from how many rows).",
+  "Rows that disagree, or that cannot be paired name for name with an address, hold the whole",
+  "jurisdiction in _held and stay off the page. A new sheet shape lands in _held, which is correct."
  ],
  "window": {
   "start": "2026-10-24",
@@ -41,7 +43,7 @@
     {
      "name": "Lake Charter Township",
      "addr": "3220 Shawnee Rd. Bridgman, MI 49106",
-     "hours": "Saturday, October 24, 2026 - Tuesday, October 27, 2026. 8:30 AM - 4:30 PM Wednesday, October 28, 2026. 11:00 AM - 7:00 PM Thursday, October 29, 2026 - Sunday, November 1, 2026. 8:30 AM - 4:30 PM",
+     "hours": "Saturday, October 24 to Tuesday, October 27. 8:30 am to 4:30 pm; Wednesday, October 28. 11 am to 7 pm; Thursday, October 29 to Sunday, November 1. 8:30 am to 4:30 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -72,11 +74,25 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "0053864005009": {
+   "sites": [
+    {
+     "name": "City Hall",
+     "addr": "270 South River Ave. Holland, MI 49423",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Holland",
+   "inherited": true
+  },
   "0250098000004": {
    "sites": [
     {
-     "name": "CALHOUN COUNTY BUILDING",
-     "addr": "3RD FLOOR 315 W. GREEN ST. MARSHALL, MI 49068",
+     "name": "Calhoun County Building",
+     "addr": "3rd Floor 315 W. Green St. Marshall, MI 49068",
      "hours": "9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
@@ -134,21 +150,44 @@
   "0370590000005": {
    "sites": [
     {
-     "name": "Dewitt Charter Township",
-     "addr": "1445 W Herbison Rd, DeWitt, MI 48820",
-     "hours": "October 24, 25, 26, 27, 30, 31st, and 1st, 8 am to 4 pm October 28 and 29, 11 am to 7 pm",
+     "name": "DeWitt Charter Township Hall (south site)",
+     "addr": "1401 W Herbison Rd, DeWitt, MI 48820",
+     "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
      "dates": "October 24 to November 1"
     },
     {
-     "name": "Hall Bingham Township Hall",
+     "name": "Bingham Township Hall (north site)",
      "addr": "2057 N Lansing St, St Johns, MI 48879",
-     "hours": "October 24, 25, 26, 27, 30, 31st, and 1st, 8 am to 4 pm October 28 and 29, 11 am to 7 pm",
+     "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
      "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "0652412000009": {
+   "sites": [
+    {
+     "name": "WKAR Studio A, Communication Arts and Sciences Building",
+     "addr": "404 Wilson Road, East Lansing, MI 48824",
+     "hours": "10 am to 6 pm, and 9 am to 4 pm on November 2",
+     "dates": "October 19 to November 2",
+     "campus": true
+    },
+    {
+     "name": "Hannah Community Center",
+     "addr": "819 Abbot Rd, East Lansing, MI 48823",
+     "hours": "9 am to 5 pm, and 9 am to 4 pm on November 2",
+     "dates": "October 24 to November 2"
+    }
+   ],
+   "satellite": {
+    "where": "WKAR Studio A on campus, October 19 to November 2, same hours as early voting.",
+    "hours": ""
+   },
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "0652412000013": {
    "sites": [
@@ -178,7 +217,7 @@
     {
      "name": "Commission on Aging",
      "addr": "515 S Pine River St Ithaca, MI 48847",
-     "hours": "October 24 to October 25: 12 pm to 8 pm October 26 to November 1: 9 am to 5 pm",
+     "hours": "October 24 to October 25: 12 pm to 8 pm; October 26 to November 1: 9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -186,12 +225,26 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
   },
+  "0613936000001": {
+   "sites": [
+    {
+     "name": "First Apostolic Lutheran Church",
+     "addr": "19741 W Sharon Ave. Houghton, MI 49931",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Houghton",
+   "inherited": true
+  },
   "0570154000001": {
    "sites": [
     {
      "name": "Commission on Aging",
      "addr": "515 S Pine River St Ithaca, MI 48847",
-     "hours": "October 24 to October 25: 12 pm to 8 pm October 26 to November 1: 9 am to 5 pm",
+     "hours": "October 24 to October 25: 12 pm to 8 pm; October 26 to November 1: 9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -202,8 +255,8 @@
   "0250098000006": {
    "sites": [
     {
-     "name": "CALHOUN COUNTY BUILDING",
-     "addr": "3RD FLOOR 315 W. GREEN ST. MARSHALL, MI 49068",
+     "name": "Calhoun County Building",
+     "addr": "3rd Floor 315 W. Green St. Marshall, MI 49068",
      "hours": "9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
@@ -212,11 +265,25 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
   },
+  "0492900005014": {
+   "sites": [
+    {
+     "name": "Flint City Council Chambers, 3rd Floor",
+     "addr": "1101 Saginaw St #310, Flint, MI 48502",
+     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm; October 26 to October 30: 9 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 3 confirmed rows for City of Flint",
+   "inherited": true
+  },
   "0250098000005": {
    "sites": [
     {
-     "name": "CALHOUN COUNTY BUILDING",
-     "addr": "3RD FLOOR 315 W. GREEN ST. MARSHALL, MI 49068",
+     "name": "Calhoun County Building",
+     "addr": "3rd Floor 315 W. Green St. Marshall, MI 49068",
      "hours": "9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
@@ -224,14 +291,38 @@
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
+  },
+  "0652412000011": {
+   "sites": [
+    {
+     "name": "WKAR Studio A, Communication Arts and Sciences Building",
+     "addr": "404 Wilson Road, East Lansing, MI 48824",
+     "hours": "10 am to 6 pm, and 9 am to 4 pm on November 2",
+     "dates": "October 19 to November 2",
+     "campus": true
+    },
+    {
+     "name": "Hannah Community Center",
+     "addr": "819 Abbot Rd, East Lansing, MI 48823",
+     "hours": "9 am to 5 pm, and 9 am to 4 pm on November 2",
+     "dates": "October 24 to November 2"
+    }
+   ],
+   "satellite": {
+    "where": "WKAR Studio A on campus, October 19 to November 2, same hours as early voting.",
+    "hours": ""
+   },
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 13 confirmed rows for City of East Lansing",
+   "inherited": true
   },
   "0173018000001": {
    "sites": [
     {
      "name": "Bay County Community Center",
      "addr": "800 John F Kennedy Dr, Bay City, MI 48706",
-     "hours": "8:30:00 AM - 4:30 PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "8:30 am to 4:30 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -243,8 +334,8 @@
     {
      "name": "Township Hall",
      "addr": "1725 Territorial Rd., Benton Harbor, MI 49022",
-     "hours": "October 24: 8 am to 4 pm October 25: 8 am to 4 pm October 26 to October 30: 9 am to 5 pm October 31 to November 1: 8 am to 4 pm",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "October 24: 8 am to 4 pm; October 25: 8 am to 4 pm; October 26 to October 30: 9 am to 5 pm; October 31 to November 1: 8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -254,7 +345,7 @@
   "0613936000002": {
    "sites": [
     {
-     "name": "First Apostolic Lutheran Church, 19741 W Sharon Ave. Houghton, MI 49931&#13;",
+     "name": "First Apostolic Lutheran Church",
      "addr": "19741 W Sharon Ave. Houghton, MI 49931",
      "hours": "8 am to 4 pm",
      "dates": "October 24 to November 1"
@@ -292,7 +383,7 @@
     {
      "name": "Lake Charter Township",
      "addr": "3220 Shawnee Rd. Bridgman, MI 49106",
-     "hours": "Saturday, October 24, 2026 - Tuesday, October 27, 2026. 8:30 AM - 4:30 PM Wednesday, October 28, 2026. 11:00 AM - 7:00 PM Thursday, October 29, 2026 - Sunday, November 1, 2026. 8:30 AM - 4:30 PM",
+     "hours": "Saturday, October 24 to Tuesday, October 27. 8:30 am to 4:30 pm; Wednesday, October 28. 11 am to 7 pm; Thursday, October 29 to Sunday, November 1. 8:30 am to 4:30 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -305,8 +396,8 @@
     {
      "name": "Governmental Center",
      "addr": "400 Boardman Avenue, Traverse City, Michigan 49684",
-     "hours": "October 24 to November 1, 9 am to 5 pm&#13;",
-     "dates": "10/24 to 11/1"
+     "hours": "October 24 to November 1, 9 am to 5 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -339,8 +430,8 @@
   "0250098000002": {
    "sites": [
     {
-     "name": "CALHOUN COUNTY BUILDING",
-     "addr": "3RD FLOOR 315 W. GREEN ST. MARSHALL, MI 49068",
+     "name": "Calhoun County Building",
+     "addr": "3rd Floor 315 W. Green St. Marshall, MI 49068",
      "hours": "9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
@@ -353,33 +444,79 @@
    "sites": [
     {
      "name": "Lansing Elections Office",
-     "addr": "701 W. Jolly Rd, Lansing MI, 48910",
-     "hours": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm",
-     "dates": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm"
+     "addr": "701 W Jolly Rd, Lansing, MI 48910",
+     "hours": "9 am to 5 pm, 11 am to 7 pm on Wednesday October 28, and 9 am to 4 pm on Monday November 2",
+     "dates": "October 24 to November 2"
     },
     {
      "name": "Foster Community Center",
-     "addr": "200 N. Foster Ave. Lansing MI, 48912",
-     "hours": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm",
-     "dates": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm"
+     "addr": "200 N Foster Ave, Lansing, MI 48912",
+     "hours": "10 am to 6 pm, and 10 am to 4 pm on Monday November 2",
+     "dates": "October 24 to November 2"
     }
    ],
-   "satellite": null,
+   "satellite": {
+    "where": "Foster Community Center also serves as a clerk satellite on Election Day, 7 am to 8 pm.",
+    "hours": ""
+   },
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
-  "0372214000006": {
+  "0613630000001": {
    "sites": [
     {
-     "name": "South Early Voting Site DeWitt Charter Township Hall, 1401 W. Herbison Rd., DeWitt, MI 48820 North Early Voting Site Bingham Township Hall, 2057 N. Lansing, St., St. Johns, MI 48879",
-     "addr": "1401 W. Herbison Rd., DeWitt, MI 48820 2057 N. Lansing, St., St. Johns, MI 48879",
-     "hours": "Day 1 Sat to 8AM-4PM Oct 24 Day 2 Sun to 8AM-4PM Oct 25 Day 3 Mon to 8AM-4PM Oct 26 Day 4 Tue to 8AM-4PM Oct 27 Day 5 Wed to 11AM-7PM Oct 28 Day 6 Thu to 11AM-7PM Oct 29 Day 7 Fri to 8AM-4PM Oct 30 Day 8 Sat to 8AM-4PM Oct 31 Day 9 Sun to 8AM-4PM Nov 1",
+     "name": "HoCo Arena",
+     "addr": "1500 Birch St, Hancock, MI 49930",
+     "hours": "8 am to 4 pm",
      "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "City of Hancock election notice (cityofhancock.com/info-election.php): countywide Houghton County early voting site for the August and November 2026 elections"
+  },
+  "0652412000005": {
+   "sites": [
+    {
+     "name": "WKAR Studio A, Communication Arts and Sciences Building",
+     "addr": "404 Wilson Road, East Lansing, MI 48824",
+     "hours": "10 am to 6 pm, and 9 am to 4 pm on November 2",
+     "dates": "October 19 to November 2",
+     "campus": true
+    },
+    {
+     "name": "Hannah Community Center",
+     "addr": "819 Abbot Rd, East Lansing, MI 48823",
+     "hours": "9 am to 5 pm, and 9 am to 4 pm on November 2",
+     "dates": "October 24 to November 2"
+    }
+   ],
+   "satellite": {
+    "where": "WKAR Studio A on campus, October 19 to November 2, same hours as early voting.",
+    "hours": ""
+   },
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 13 confirmed rows for City of East Lansing",
+   "inherited": true
+  },
+  "0372214000006": {
+   "sites": [
+    {
+     "name": "DeWitt Charter Township Hall (south site)",
+     "addr": "1401 W Herbison Rd, DeWitt, MI 48820",
+     "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Bingham Township Hall (north site)",
+     "addr": "2057 N Lansing St, St Johns, MI 48879",
+     "hours": "8 am to 4 pm, and 11 am to 7 pm on October 28 and 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "0652412000003": {
    "sites": [
@@ -409,8 +546,8 @@
     {
      "name": "Governmental Center",
      "addr": "400 Boardman Avenue, Traverse City, Michigan 49684",
-     "hours": "October 24 to November 1, 9 am to 5 pm&#13;",
-     "dates": "10/24 to 11/1"
+     "hours": "October 24 to November 1, 9 am to 5 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -445,8 +582,8 @@
     {
      "name": "Lake Charter Township",
      "addr": "3220 Shawnee Rd. Bridgman, MI 49106",
-     "hours": "Saturday, October 24, 2026 - Tuesday, October 27, 2026. 8:30 AM - 4:30 PM Wednesday, October 28, 2026. 11:00 AM - 7:00 PM Thursday, October 29, 2026 - Sunday, November 1, 2026. 8:30 AM - 4:30 PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "Saturday, October 24 to Tuesday, October 27. 8:30 am to 4:30 pm; Wednesday, October 28. 11 am to 7 pm; Thursday, October 29 to Sunday, November 1. 8:30 am to 4:30 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -456,9 +593,9 @@
   "0492900006016": {
    "sites": [
     {
-     "name": "Fint City Council Chambers, 3rd Floor",
-     "addr": "1101 Saginaw St \\#310, Flint, MI 48502",
-     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm October 26 to October 30: 9 am to 4 pm",
+     "name": "Flint City Council Chambers, 3rd Floor",
+     "addr": "1101 Saginaw St #310, Flint, MI 48502",
+     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm; October 26 to October 30: 9 am to 4 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -466,13 +603,26 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
   },
+  "0616554000002": {
+   "sites": [
+    {
+     "name": "HoCo Arena",
+     "addr": "1500 Birch St, Hancock, MI 49930",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "City of Hancock election notice (cityofhancock.com/info-election.php): countywide Houghton County early voting site for the August and November 2026 elections"
+  },
   "0210740000005": {
    "sites": [
     {
      "name": "Township Hall",
      "addr": "1725 Territorial Rd., Benton Harbor, MI 49022",
-     "hours": "9:00 AM - 5:00 PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "October 24: 8 am to 4 pm; October 25: 8 am to 4 pm; October 26 to October 30: 9 am to 5 pm; October 31 to November 1: 8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -483,8 +633,8 @@
    "sites": [
     {
      "name": "Flint City Council Chambers, 3rd Floor",
-     "addr": "1101 Saginaw St \\#310, Flint, MI 48502",
-     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm October 26 to October 30: 9 am to 4 pm",
+     "addr": "1101 Saginaw St #310, Flint, MI 48502",
+     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm; October 26 to October 30: 9 am to 4 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -519,8 +669,8 @@
    "sites": [
     {
      "name": "Flint City Council Chambers, 3rd Floor",
-     "addr": "1101 Saginaw St \\#310, Flint, MI 48502",
-     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm October 26 to October 30: 9 am to 4 pm",
+     "addr": "1101 Saginaw St #310, Flint, MI 48502",
+     "hours": "October 24 to 25 and October 31 and November 1: 9 am to 5 pm; October 26 to October 30: 9 am to 4 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -534,7 +684,7 @@
      "name": "Powers Hall",
      "addr": "1251 S Washington St, Mt Pleasant, MI 48858",
      "hours": "8 am to 4 pm",
-     "dates": "10/24/11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -546,8 +696,8 @@
     {
      "name": "Powers Hall",
      "addr": "1251 S Washington St, Mt Pleasant, MI 48858",
-     "hours": "8 am to 4 p.m",
-     "dates": "10/24 to 11/1"
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -560,7 +710,7 @@
      "name": "Meridian Township Municipal Building",
      "addr": "5151 Marsh Rd, Okemos, MI 48864",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -570,10 +720,10 @@
   "1070830000002": {
    "sites": [
     {
-     "name": "BIG RAPIDS TWP HALL",
+     "name": "Big Rapids Twp Hall",
      "addr": "14230 Northland Drive, Big Rapids, Michigan 49307",
-     "hours": "8:30 AM - 4:30 PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "8:30 am to 4:30 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -584,20 +734,23 @@
    "sites": [
     {
      "name": "Lansing Elections Office",
-     "addr": "701 W. Jolly Rd, Lansing MI, 48910",
-     "hours": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm",
+     "addr": "701 W Jolly Rd, Lansing, MI 48910",
+     "hours": "9 am to 5 pm, 11 am to 7 pm on Wednesday October 28, and 9 am to 4 pm on Monday November 2",
      "dates": "October 24 to November 2"
     },
     {
      "name": "Foster Community Center",
-     "addr": "200 N. Foster Ave. Lansing MI, 48912",
-     "hours": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm",
+     "addr": "200 N Foster Ave, Lansing, MI 48912",
+     "hours": "10 am to 6 pm, and 10 am to 4 pm on Monday November 2",
      "dates": "October 24 to November 2"
     }
    ],
-   "satellite": null,
+   "satellite": {
+    "where": "Foster Community Center also serves as a clerk satellite on Election Day, 7 am to 8 pm.",
+    "hours": ""
+   },
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "0774216000007": {
    "sites": [
@@ -637,10 +790,10 @@
   "1070832000001": {
    "sites": [
     {
-     "name": "BIG RAPIDS TWP HALL",
-     "addr": "BIG RAPIDS TWP HALL 14230 Northland Drive, Big Rapids, Michigan 49307",
-     "hours": "8:30 AM - 4:30 PM",
-     "dates": "October 24 to November 1, 2026"
+     "name": "Big Rapids Twp Hall",
+     "addr": "14230 Northland Drive, Big Rapids, Michigan 49307",
+     "hours": "8:30 am to 4:30 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -651,8 +804,8 @@
    "sites": [
     {
      "name": "Caledonia Township Hall",
-     "addr": "8196 Broadmoor Avenue SE.",
-     "hours": "Saturday, October 24: 7:30 am to 3:30 pm Sunday, October 25: 7:30 am to 3:30 pm Monday, October 26: 8 am to 4 pm Tuesday, October 27: 8 am to 4 pm Wednesday, October 28: 8 am to 4 pm Thursday, October 29: 8 am to 4 pm Friday, October 30: 8 am to 4 pm Saturday, October 31: 7:30 am to 3:30 pm Sunday, November 1: 7:30 am to 3:30 pm",
+     "addr": "8196 Broadmoor Avenue SE, Caledonia, MI 49316",
+     "hours": "Saturday, October 24: 7:30 am to 3:30 pm; Sunday, October 25: 7:30 am to 3:30 pm; Monday, October 26: 8 am to 4 pm; Tuesday, October 27: 8 am to 4 pm; Wednesday, October 28: 8 am to 4 pm; Thursday, October 29: 8 am to 4 pm; Friday, October 30: 8 am to 4 pm; Saturday, October 31: 7:30 am to 3:30 pm; Sunday, November 1: 7:30 am to 3:30 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -736,25 +889,25 @@
      "name": "Douglass Community Association",
      "addr": "1000 W Paterson St., Kalamazoo, MI 49007",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Kalamazoo County Expo Center",
      "addr": "2900 Lake St., Kalamazoo, MI 49048",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Fetzer Center at WMU",
      "addr": "2251 Business Ct., Kalamazoo, MI 49008",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Portage Parks & Recreation Department",
      "addr": "320 Library Ln., Portage, MI 49002",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -767,7 +920,7 @@
      "name": "Powers Hall",
      "addr": "1251 S Washington St, Mt Pleasant, MI 48858",
      "hours": "8 am to 4 pm",
-     "dates": "10/24/11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -780,7 +933,7 @@
      "name": "Meridian Township Municipal Building",
      "addr": "5151 Marsh Rd, Okemos, MI 48864",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -818,48 +971,13 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
-  "0658744000001": {
-   "sites": [
-    {
-     "name": "WKAR Studio A (Communication Arts and Sciences Building)",
-     "addr": "404 Wilson Road, East Lansing, MI 48824",
-     "hours": "10 am to 6 pm from October 19 to November 1, 9 am to 4 pm on November 2 For Hannah",
-     "dates": "October 19 to November 2 Hannah"
-    },
-    {
-     "name": "East Lansing Hannah Community Center",
-     "addr": "819 Abbot Rd, East Lansing, MI 48823",
-     "hours": "9 am to 5 pm from October 24 to November 1, 9 am to 4 pm on November 2",
-     "dates": "October 24 to November 2"
-    }
-   ],
-   "satellite": {
-    "where": "WKAR Studio A (October 19 to November 2) East Lansing Hannah Community Center (October 24 to November 2)",
-    "hours": "Same as early voting each day"
-   },
-   "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
-  },
-  "0813402000001": {
-   "sites": [
-    {
-     "name": "Wisner Center (Inside Kent District Library-Cascade Branch)",
-     "addr": "2870 Jacksmith Ave SE Grand Rapids, MI 49546",
-     "hours": "7:30 am to 3:30 pm",
-     "dates": "October 24 to November 1"
-    }
-   ],
-   "satellite": null,
-   "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
-  },
   "0776140000009": {
    "sites": [
     {
      "name": "Fetzer Center",
      "addr": "2251 Business Ct Kalamazoo, MI 49008",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -889,14 +1007,14 @@
    "sites": [
     {
      "name": "Public Safety Building, Community Room",
-     "addr": "1901 N. Squirrel Rd., Auburn Hills, Michigan 48326",
-     "hours": "Early Voting site open from 8:30 AM - 4:30 PM, except Thursday, October 29th when the hours are noon - 8:00 PM.",
-     "dates": "October 24 to November 1, 2026"
+     "addr": "1899 N Squirrel Rd, Auburn Hills, MI 48326",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "1035190000001": {
    "sites": [
@@ -917,33 +1035,28 @@
      "name": "Meridian Township Municipal Building",
      "addr": "5151 Marsh Rd, Okemos, MI 48864",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
   },
-  "0654600002015": {
+  "0655314000003": {
    "sites": [
     {
-     "name": "Lansing Elections Office",
-     "addr": "701 W. Jolly Rd, Lansing MI, 48910",
-     "hours": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm",
-     "dates": ""
-    },
-    {
-     "name": "Foster Community Center",
-     "addr": "200 N. Foster Ave. Lansing MI, 48912",
-     "hours": "(At Elections Office): Saturday, October 24 to Tuesday, October 27 from 9 am to 5 pm, Wednesday, October 28 from 11 am to 7 pm, Thursday, October 29 to Sunday, November 1 from 9 am to 5 pm, and Monday, November 2 from 9 am to 4 pm (At Foster Community Center): Saturday, October 24 to Sunday, November 1 from 10 am to 6 pm Monday, November 2 from 10 am to 4 pm",
-     "dates": ""
+     "name": "Meridian Township Municipal Building",
+     "addr": "5151 Marsh Rd, Okemos, MI 48864",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, inherited from 6 confirmed rows for Meridian Township",
+   "inherited": true
   },
-  "0812398001001": {
+  "0813400002021": {
    "sites": [
     {
      "name": "St. Peter and Paul School",
@@ -972,15 +1085,52 @@
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Grand Rapids",
+   "inherited": true
+  },
+  "0654600002015": {
+   "sites": [
+    {
+     "name": "Lansing Elections Office",
+     "addr": "701 W Jolly Rd, Lansing, MI 48910",
+     "hours": "9 am to 5 pm, 11 am to 7 pm on Wednesday October 28, and 9 am to 4 pm on Monday November 2",
+     "dates": "October 24 to November 2"
+    },
+    {
+     "name": "Foster Community Center",
+     "addr": "200 N Foster Ave, Lansing, MI 48912",
+     "hours": "10 am to 6 pm, and 10 am to 4 pm on Monday November 2",
+     "dates": "October 24 to November 2"
+    }
+   ],
+   "satellite": {
+    "where": "Foster Community Center also serves as a clerk satellite on Election Day, 7 am to 8 pm.",
+    "hours": ""
+   },
+   "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "1035190000002": {
+   "sites": [
+    {
+     "name": "Peter White Public Library, Lower Level",
+     "addr": "217 N Front St, Marquette, MI 49855",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Marquette",
+   "inherited": true
   },
   "0757720000006": {
    "sites": [
     {
      "name": "Summit Township Hall",
-     "addr": "2121 Ferguson Rd. 49203",
-     "hours": "8 am - 4 pm",
-     "dates": "10/24 to 11/1"
+     "addr": "2121 Ferguson Rd, Jackson, MI 49203",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1006,13 +1156,63 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "0774216000002": {
+   "sites": [
+    {
+     "name": "Fetzer Center at WMU",
+     "addr": "2251 Business Ct, Kalamazoo, MI 49008",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1",
+     "campus": true
+    },
+    {
+     "name": "Douglass Community Association",
+     "addr": "1000 W Paterson St, Kalamazoo, MI 49007",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Kalamazoo County Expo Center",
+     "addr": "2900 Lake St, Kalamazoo, MI 49048",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Portage Parks and Recreation Department",
+     "addr": "320 Library Ln, Portage, MI 49002",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": {
+    "where": "Fetzer Center on campus is also a clerk satellite from October 12: weekdays 9 am to 5 pm, Saturday October 31 9 am to 5 pm, Monday November 2 8 am to 4 pm, and Election Day 7 am to 8 pm.",
+    "hours": ""
+   },
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 3 confirmed rows for City of Kalamazoo",
+   "inherited": true
+  },
+  "1035190000004": {
+   "sites": [
+    {
+     "name": "Peter White Public Library, Lower Level",
+     "addr": "217 N Front St, Marquette, MI 49855",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Marquette",
+   "inherited": true
+  },
   "0655314000002": {
    "sites": [
     {
      "name": "Meridian Township Municipal Building",
      "addr": "5151 Marsh Rd, Okemos, MI 48864",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1024,8 +1224,8 @@
     {
      "name": "Powers Hall",
      "addr": "1251 S Washington St, Mt Pleasant, MI 48858",
-     "hours": "8 am to 4 p.m",
-     "dates": "10/24 to 11/1"
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1038,25 +1238,75 @@
      "name": "Meridian Township Municipal Building",
      "addr": "5151 Marsh Rd, Okemos, MI 48864",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
   },
+  "0774216000003": {
+   "sites": [
+    {
+     "name": "Fetzer Center at WMU",
+     "addr": "2251 Business Ct, Kalamazoo, MI 49008",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1",
+     "campus": true
+    },
+    {
+     "name": "Douglass Community Association",
+     "addr": "1000 W Paterson St, Kalamazoo, MI 49007",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Kalamazoo County Expo Center",
+     "addr": "2900 Lake St, Kalamazoo, MI 49048",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Portage Parks and Recreation Department",
+     "addr": "320 Library Ln, Portage, MI 49002",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": {
+    "where": "Fetzer Center on campus is also a clerk satellite from October 12: weekdays 9 am to 5 pm, Saturday October 31 9 am to 5 pm, Monday November 2 8 am to 4 pm, and Election Day 7 am to 8 pm.",
+    "hours": ""
+   },
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 3 confirmed rows for City of Kalamazoo",
+   "inherited": true
+  },
   "0776140000005": {
    "sites": [
     {
      "name": "Fetzer Center",
      "addr": "2251 Business Ct Kalamazoo, MI 49008",
-     "hours": "9:00 AM - 5:00 PM",
-     "dates": "10/24 to 11/1"
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
+  },
+  "1035190000003": {
+   "sites": [
+    {
+     "name": "Peter White Public Library, Lower Level",
+     "addr": "217 N Front St, Marquette, MI 49855",
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Marquette",
+   "inherited": true
   },
   "0655314000013": {
    "sites": [
@@ -1064,7 +1314,7 @@
      "name": "Meridian Township Municipal Building",
      "addr": "5151 Marsh Rd, Okemos, MI 48864",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1075,14 +1325,34 @@
    "sites": [
     {
      "name": "Public Safety Building, Community Room",
-     "addr": "1900 N. Squirrel Rd., Auburn Hills, Michigan 48326",
-     "hours": "Early Voting site open from 8:30 AM - 4:30 PM, except Thursday, October 29th when the hours are noon - 8:00 PM.",
-     "dates": "October 24 to November 1, 2026"
+     "addr": "1899 N Squirrel Rd, Auburn Hills, MI 48326",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "1115378002003": {
+   "sites": [
+    {
+     "name": "Greater Midland Community Center",
+     "addr": "2205 Jefferson Ave, Midland, MI 48640",
+     "hours": "9 am to 5 pm, and 11 am to 7 pm on October 28 and 29",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Coleman City Hall",
+     "addr": "201 E Railway St, Coleman, MI 48618",
+     "hours": "9 am to 5 pm, and 11 am to 7 pm on October 28 and 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Midland",
+   "inherited": true
   },
   "0774218000004": {
    "sites": [
@@ -1090,25 +1360,25 @@
      "name": "Douglass Community Association",
      "addr": "1000 W Paterson St., Kalamazoo, MI 49007",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Kalamazoo County Expo Center",
      "addr": "2900 Lake St., Kalamazoo, MI 49048",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Fetzer Center at WMU",
      "addr": "2251 Business Ct., Kalamazoo, MI 49008",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Portage Parks & Recreation Department",
      "addr": "320 Library Ln., Portage, MI 49002",
      "hours": "9 am to 5 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1163,13 +1433,33 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "1257004000001": {
+   "sites": [
+    {
+     "name": "Mahany/Meininger Senior Center",
+     "addr": "3500 Marais Ave, Royal Oak, MI 48073",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Waterford Oaks Activity Center",
+     "addr": "2800 Watkins Lake Rd, Waterford, MI 48328",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Royal Oak",
+   "inherited": true
+  },
   "1618914001002": {
    "sites": [
     {
      "name": "Ypsilanti Freighthouse",
      "addr": "100 Market Place Ypsilanti, MI 48198",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1181,13 +1471,27 @@
     {
      "name": "Georgetown Twp. Office",
      "addr": "1515 Baldwin St. Jenison, MI 49428",
-     "hours": "8AM-4PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
+  },
+  "1257490000016": {
+   "sites": [
+    {
+     "name": "Park & Recreation Room 115",
+     "addr": "26000 Evergreen Rd, Southfield, MI.",
+     "hours": "8:30 am to 4:30 pm (except Thursday, from noon to 8 pm)",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Southfield",
+   "inherited": true
   },
   "1390894000002": {
    "sites": [
@@ -1195,12 +1499,26 @@
      "name": "Allendale Township Hall",
      "addr": "6676 Lake Michigan Drive, Allendale, MI",
      "hours": "8 am to 4 pm",
-     "dates": "October 24 to November 1, 2026"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet"
+  },
+  "1250410500006": {
+   "sites": [
+    {
+     "name": "Public Safety Building, Community Room",
+     "addr": "1899 N Squirrel Rd, Auburn Hills, MI 48326",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 3 confirmed rows for City of Auburn Hills",
+   "inherited": true
   },
   "1610300001007": {
    "sites": [
@@ -1304,7 +1622,7 @@
      "name": "Park & Recreation Room 115",
      "addr": "26000 Evergreen Rd, Southfield, MI.",
      "hours": "8:30 am to 4:30 pm (except Thursday, from noon to 8 pm)",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1359,26 +1677,27 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
-  "1251004000006": {
+  "1256903501005": {
    "sites": [
     {
-     "name": "MUNICIPAL BUILDING",
-     "addr": "400 Sixth Street Rochester, Michigan 48307",
-     "hours": "Saturday October 24th 9 am - 5 pm Sunday October 25th 9 am - 5 pm Monday October 26th 9 am - 5 pm Tuesday October 27th 9 am - 5 pm Wednesday October 28th 9 am - 5 pm Thursday October 29th 12 pm - 8 pm Friday October 30th 9 am - 5 pm Saturday October 31st 9 am - 5 pm Sunday November 1st 9 am - 5 pm",
-     "dates": "10/24 to 11/1"
+     "name": "Rochester Hills Public Library",
+     "addr": "500 Olde Towne Rd, Rochester, MI 48307",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Rochester Hills",
+   "inherited": true
   },
   "1393864006010": {
    "sites": [
     {
      "name": "City Hall",
      "addr": "270 South River Ave. Holland, MI 49423",
-     "hours": "8:00 AM - 4:00 PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1437,14 +1756,14 @@
    "sites": [
     {
      "name": "Public Safety Building, Community Room",
-     "addr": "1899 N. Squirrel Rd., Auburn Hills, Michigan 48326",
-     "hours": "Early Voting site open from 8:30 AM - 4:30 PM, except Thursday, October 29th when the hours are noon - 8:00 PM.",
-     "dates": "October 24 to November 1, 2026"
+     "addr": "1899 N Squirrel Rd, Auburn Hills, MI 48326",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "1610300002014": {
    "sites": [
@@ -1546,27 +1865,27 @@
    "sites": [
     {
      "name": "Saginaw County Early Voting Center",
-     "addr": "618 Cass Street Saginaw, MI, 48602",
-     "hours": "October 24: 9 am to 5 pm October 25 : 9 am to 5 pm October 26: 9 am to 5 pm October 27: 9 am to 5 pm October 28: 9 am to 7 pm October 29: 9 am to 5 pm October 30: 9 am to 5 pm October 31: 9 am to 5 pm November 1: 9 am to 5 pm",
+     "addr": "618 Cass St, Saginaw, MI 48602",
+     "hours": "9 am to 5 pm, and until 7 pm on Wednesday October 28",
      "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "1256903501003": {
    "sites": [
     {
      "name": "Rochester Hills Public Library",
-     "addr": "500 Olde Towne Rd. Rochester, MI 48307",
-     "hours": "Monday&#9;8:30 am - 4:30 pm Tuesday&#9;8:30 am - 4:30 pm Wednesday&#9;8:30 am - 4:30 pm Thursday&#9;12 pm - 8 pm Friday&#9;8:30 am - 4:30 pm Saturday&#9;8:30 am - 4:30 pm Sunday&#9;8:30 am - 4:30 pm",
-     "dates": "10/24 to 11/1"
+     "addr": "500 Olde Towne Rd, Rochester, MI 48307",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "1610300003023": {
    "sites": [
@@ -1668,25 +1987,39 @@
    "sites": [
     {
      "name": "Allendale Township Hall",
-     "addr": "6679 Lake Michigan Dr, Allendale, MI 49401",
-     "hours": "not updated online",
+     "addr": "6676 Lake Michigan Dr, Allendale, MI 49401",
+     "hours": "8 am to 4 pm",
      "dates": "October 24 to November 1"
     }
    ],
    "satellite": {
-    "where": "Russel H. Kirkhof Center 1 Campus Drive Allendale, Michigan 49401",
-    "hours": "10/28 to 10/30, 10 am to 2 pm"
+    "where": "Clerk satellite office on campus at the Russel H. Kirkhof Center, 1 Campus Drive, October 28 to 30, 10 am to 2 pm, for Allendale Township voters only.",
+    "hours": ""
    },
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "1256903504021": {
+   "sites": [
+    {
+     "name": "Rochester Hills Public Library",
+     "addr": "500 Olde Towne Rd, Rochester, MI 48307",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Rochester Hills",
+   "inherited": true
   },
   "1393864002003": {
    "sites": [
     {
      "name": "City Hall",
      "addr": "270 South River Ave. Holland, MI 49423",
-     "hours": "8:00 AM - 4:00 PM",
-     "dates": "October 24 to November 1, 2026"
+     "hours": "8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1744,21 +2077,35 @@
   "1257004000008": {
    "sites": [
     {
-     "name": "M/M Senior Center",
-     "addr": "3500 Marais, Royal Oak, MI 48073",
-     "hours": "8:30 am - 4:30 pm October 29th in which the voting hours will be from 12 pm - 8 pm.",
-     "dates": "10/24 to 11/1"
+     "name": "Mahany/Meininger Senior Center",
+     "addr": "3500 Marais Ave, Royal Oak, MI 48073",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     },
     {
      "name": "Waterford Oaks Activity Center",
      "addr": "2800 Watkins Lake Rd, Waterford, MI 48328",
-     "hours": "8:30 am - 4:30 pm October 29th in which the voting hours will be from 12 pm - 8 pm.",
-     "dates": "10/24 to 11/1"
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "1256902000002": {
+   "sites": [
+    {
+     "name": "Rochester Municipal Building",
+     "addr": "400 Sixth St, Rochester, MI 48307",
+     "hours": "9 am to 5 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Rochester",
+   "inherited": true
   },
   "1610300002013": {
    "sites": [
@@ -1856,13 +2203,27 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "1256903504020": {
+   "sites": [
+    {
+     "name": "Rochester Hills Public Library",
+     "addr": "500 Olde Towne Rd, Rochester, MI 48307",
+     "hours": "8:30 am to 4:30 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Rochester Hills",
+   "inherited": true
+  },
   "1257490000015": {
    "sites": [
     {
      "name": "Park & Recreation Room 115",
      "addr": "26000 Evergreen Rd, Southfield, MI.",
      "hours": "8:30 am to 4:30 pm (except Thursday, from noon to 8 pm)",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -1975,11 +2336,11 @@
     }
    ],
    "satellite": {
-    "where": "Russel H. Kirkhof Center 1 Campus Drive Allendale, Michigan 49401",
-    "hours": "10/28 to 10/30, 10 am to 2 pm"
+    "where": "Clerk satellite office on campus at the Russel H. Kirkhof Center, 1 Campus Drive, October 28 to 30, 10 am to 2 pm, for Allendale Township voters only.",
+    "hours": ""
    },
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "1610300002019": {
    "sites": [
@@ -2033,30 +2394,44 @@
    "sites": [
     {
      "name": "Allendale Township Hall",
-     "addr": "6678 Lake Michigan Dr, Allendale, MI 49401",
+     "addr": "6676 Lake Michigan Dr, Allendale, MI 49401",
      "hours": "8 am to 4 pm",
      "dates": "October 24 to November 1"
     }
    ],
    "satellite": {
-    "where": "Russel H. Kirkhof Center 1 Campus Drive Allendale, Michigan 49401",
-    "hours": "10/28 to 10/30, 10 am to 2 pm"
+    "where": "Clerk satellite office on campus at the Russel H. Kirkhof Center, 1 Campus Drive, October 28 to 30, 10 am to 2 pm, for Allendale Township voters only.",
+    "hours": ""
    },
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
   },
   "1457054000008": {
    "sites": [
     {
-     "name": "Michigan Department of Corrections - 10th Circuit Court Probation Office",
+     "name": "Saginaw County Early Voting Center",
      "addr": "618 Cass St, Saginaw, MI 48602",
-     "hours": "9 am - 5 pm Wednesday 11 am - 7 pm",
-     "dates": "10/24 to 11/1"
+     "hours": "9 am to 5 pm, and until 7 pm on Wednesday October 28",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
    "confirmed": "2026-09-18",
-   "by": "clerk, per crosswalk sheet"
+   "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "1257490000008": {
+   "sites": [
+    {
+     "name": "Park & Recreation Room 115",
+     "addr": "26000 Evergreen Rd, Southfield, MI.",
+     "hours": "8:30 am to 4:30 pm (except Thursday, from noon to 8 pm)",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 2 confirmed rows for City of Southfield",
+   "inherited": true
   },
   "1610300001006": {
    "sites": [
@@ -2330,9 +2705,9 @@
    "sites": [
     {
      "name": "City Hall",
-     "addr": "33000 Civic Center Drive",
+     "addr": "33000 Civic Center Drive, Livonia, MI 48154",
      "hours": "9:30 am to 5:30 pm",
-     "dates": "Saturday, October 24 - Sunday, November 1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -2358,7 +2733,7 @@
      "name": "Ypsilanti Freighthouse",
      "addr": "100 Market Place Ypsilanti, MI 48198",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -2371,7 +2746,7 @@
      "name": "Ypsilanti Freighthouse",
      "addr": "100 Market Place Ypsilanti, MI 48198",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -2438,7 +2813,7 @@
     {
      "name": "Ford Community & Performing Arts Center",
      "addr": "15801 Michigan Ave, Dearborn, MI 48126",
-     "hours": "9 a.m to 5 pm",
+     "hours": "9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -2666,13 +3041,69 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "1632200006146": {
+   "sites": [
+    {
+     "name": "Wayne County Community College, Eastern Campus",
+     "addr": "5901 Conner, Detroit, MI 48213",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Wayne County Community College, Northwest Campus",
+     "addr": "8200 W Outer Drive, Detroit, MI 48219",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Department of Elections",
+     "addr": "2978 W Grand Blvd, Detroit, MI 48202",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Detroit City Clerk's Office",
+     "addr": "2 Woodward Ave, Suite 106, Detroit, MI 48226",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Adam Butzel Recreation Center",
+     "addr": "10500 Lyndon, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Clark Park",
+     "addr": "1130 Clark Ave, Detroit, MI 48209",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Farwell Recreation Center",
+     "addr": "2711 E Outer Drive, Detroit, MI 48234",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Northwest Activities Center",
+     "addr": "18100 Meyers Rd, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 17 confirmed rows for City of Detroit",
+   "inherited": true
+  },
   "1618914003001": {
    "sites": [
     {
      "name": "Ypsilanti Freighthouse",
      "addr": "100 Market Place Ypsilanti, MI 48198",
      "hours": "9 am to 5 pm",
-     "dates": "10/24 to 11/1"
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -2844,19 +3275,89 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "1632200006144": {
+   "sites": [
+    {
+     "name": "Wayne County Community College, Eastern Campus",
+     "addr": "5901 Conner, Detroit, MI 48213",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Wayne County Community College, Northwest Campus",
+     "addr": "8200 W Outer Drive, Detroit, MI 48219",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Department of Elections",
+     "addr": "2978 W Grand Blvd, Detroit, MI 48202",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Detroit City Clerk's Office",
+     "addr": "2 Woodward Ave, Suite 106, Detroit, MI 48226",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Adam Butzel Recreation Center",
+     "addr": "10500 Lyndon, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Clark Park",
+     "addr": "1130 Clark Ave, Detroit, MI 48209",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Farwell Recreation Center",
+     "addr": "2711 E Outer Drive, Detroit, MI 48234",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Northwest Activities Center",
+     "addr": "18100 Meyers Rd, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 17 confirmed rows for City of Detroit",
+   "inherited": true
+  },
+  "1618914002001": {
+   "sites": [
+    {
+     "name": "Ypsilanti Freighthouse",
+     "addr": "100 Market Place Ypsilanti, MI 48198",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 5 confirmed rows for City of Ypsilanti",
+   "inherited": true
+  },
   "1618916000002": {
    "sites": [
     {
-     "name": "Ypsilanti Township",
+     "name": "Ypsilanti Township Civic Center",
      "addr": "7200 S Huron River Dr, Ypsilanti, MI 48197",
-     "hours": "Tues 11 am - 7 pm, all other days 8 am - 4 pm.",
-     "dates": "10/24 to 11/1"
+     "hours": "Tues 11 am to 7 pm, all other days 8 am to 4 pm",
+     "dates": "October 24 to November 1"
     },
     {
-     "name": "Civic Center Ypsilanti Township Community Center",
+     "name": "Ypsilanti Township Community Center",
      "addr": "2025 E Clark Rd, Ypsilanti, MI 48198",
-     "hours": "Tues 11 am - 7 pm, all other days 8 am - 4 pm.",
-     "dates": "10/24 to 11/1"
+     "hours": "Tues 11 am to 7 pm, all other days 8 am to 4 pm",
+     "dates": "October 24 to November 1"
     }
    ],
    "satellite": null,
@@ -2973,12 +3474,68 @@
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
   },
+  "1632200006150": {
+   "sites": [
+    {
+     "name": "Wayne County Community College, Eastern Campus",
+     "addr": "5901 Conner, Detroit, MI 48213",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Wayne County Community College, Northwest Campus",
+     "addr": "8200 W Outer Drive, Detroit, MI 48219",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Department of Elections",
+     "addr": "2978 W Grand Blvd, Detroit, MI 48202",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Detroit City Clerk's Office",
+     "addr": "2 Woodward Ave, Suite 106, Detroit, MI 48226",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Adam Butzel Recreation Center",
+     "addr": "10500 Lyndon, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Clark Park",
+     "addr": "1130 Clark Ave, Detroit, MI 48209",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Farwell Recreation Center",
+     "addr": "2711 E Outer Drive, Detroit, MI 48234",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Northwest Activities Center",
+     "addr": "18100 Meyers Rd, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 17 confirmed rows for City of Detroit",
+   "inherited": true
+  },
   "1632100000017": {
    "sites": [
     {
      "name": "Ford Community & Performing Arts Center",
      "addr": "15801 Michigan Ave, Dearborn, MI 48126",
-     "hours": "9 a.m to 5 pm",
+     "hours": "9 am to 5 pm",
      "dates": "October 24 to November 1"
     }
    ],
@@ -3040,47 +3597,98 @@
    "satellite": null,
    "confirmed": "2026-09-18",
    "by": "clerk, per crosswalk sheet, hand read"
+  },
+  "1632200007337": {
+   "sites": [
+    {
+     "name": "Wayne County Community College, Eastern Campus",
+     "addr": "5901 Conner, Detroit, MI 48213",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Wayne County Community College, Northwest Campus",
+     "addr": "8200 W Outer Drive, Detroit, MI 48219",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Department of Elections",
+     "addr": "2978 W Grand Blvd, Detroit, MI 48202",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Detroit City Clerk's Office",
+     "addr": "2 Woodward Ave, Suite 106, Detroit, MI 48226",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Adam Butzel Recreation Center",
+     "addr": "10500 Lyndon, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Clark Park",
+     "addr": "1130 Clark Ave, Detroit, MI 48209",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Farwell Recreation Center",
+     "addr": "2711 E Outer Drive, Detroit, MI 48234",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    },
+    {
+     "name": "Northwest Activities Center",
+     "addr": "18100 Meyers Rd, Detroit, MI 48235",
+     "hours": "9 am to 5 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 17 confirmed rows for City of Detroit",
+   "inherited": true
+  },
+  "1256902000001": {
+   "sites": [
+    {
+     "name": "Rochester Municipal Building",
+     "addr": "400 Sixth St, Rochester, MI 48307",
+     "hours": "9 am to 5 pm, and noon to 8 pm on Thursday October 29",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for City of Rochester",
+   "inherited": true
+  },
+  "0811366000005": {
+   "sites": [
+    {
+     "name": "Wisner Center (Inside Kent District Library-Cascade Branch)",
+     "addr": "2870 Jacksmith Ave SE Grand Rapids, MI 49546",
+     "hours": "7:30 am to 3:30 pm",
+     "dates": "October 24 to November 1"
+    }
+   ],
+   "satellite": null,
+   "confirmed": "2026-09-18",
+   "by": "clerk, per crosswalk sheet, inherited from 1 confirmed row for Cascade Charter Township",
+   "inherited": true
   }
  },
- "_held": {
-  "0652412000009": {
-   "name": "City of East Lansing, Precinct 9",
-   "reason": "confirmed rows disagree: grass lake charter township hall 373 lakeside drive / wkar studio a (communication arts and sciences building) east lansing hannah community center"
-  }
- },
+ "_held": {},
  "_no_row_in_sheet": {
-  "_readme": "Student precincts with no early voting row in the crosswalk sheet. The page sends these students to the state lookup. Add rows and rebuild.",
+  "_readme": "dorm precincts whose jurisdiction has no confirmed row anywhere in the sheet",
   "precincts": {
-   "0053864005009": "City of Holland, Ward 5, Precinct 9",
-   "0613936000001": "City of Houghton, Precinct 1",
-   "0492900005014": "City of Flint, Ward 5, Precinct 14",
-   "0652412000011": "City of East Lansing, Precinct 11",
-   "0613630000001": "City of Hancock, Precinct 1",
-   "0652412000005": "City of East Lansing, Precinct 5",
    "0556334000002": "Peninsula Township, Precinct 2",
-   "0616554000002": "Portage Township, Precinct 2",
-   "0655314000003": "Meridian Township, Precinct 3",
-   "0813400002021": "City of Grand Rapids, Ward 2, Precinct 21",
-   "1035190000002": "City of Marquette, Precinct 2",
-   "0774216000002": "City of Kalamazoo, Precinct 2",
-   "1035190000004": "City of Marquette, Precinct 4",
-   "0774216000003": "City of Kalamazoo, Precinct 3",
-   "1035190000003": "City of Marquette, Precinct 3",
-   "1115378002003": "City of Midland, Ward 2, Precinct 3",
-   "1257004000001": "City of Royal Oak, Precinct 1",
-   "1257490000016": "City of Southfield, Precinct 16",
-   "1250410500006": "City of Auburn Hills, Precinct 6",
-   "1256903501005": "City of Rochester Hills, District 1, Precinct 5",
-   "1256903504021": "City of Rochester Hills, District 4, Precinct 21",
-   "1256902000002": "City of Rochester, Precinct 2",
-   "1256903504020": "City of Rochester Hills, District 4, Precinct 20",
-   "1257490000008": "City of Southfield, Precinct 8",
-   "1638042000001": "City of Trenton, Precinct 1",
-   "1632200006146": "City of Detroit, Precinct 146",
-   "1632200006144": "City of Detroit, Precinct 144",
-   "1618914002001": "City of Ypsilanti, Ward 2, Precinct 1",
-   "1632200006150": "City of Detroit, Precinct 150",
-   "1632200007337": "City of Detroit, Precinct 337"
+   "1638042000001": "City of Trenton, Precinct 1"
   }
  }
 }
