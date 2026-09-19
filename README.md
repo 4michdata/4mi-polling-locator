@@ -18,13 +18,16 @@ corners, `#333` body text on white. The header carries the site's own crest
 (`assets/fm-logo.png`, pulled from 4mich.org). It is not the field suite's dark
 teal, on purpose: this is a public page on the organization's website.
 
-Campus marks live in `assets/campus/`, normalized to 96x96. Twenty two came from
-each institution's own site. Seven institutions block automated fetching or
-serve only a 16 pixel icon (Aquinas, EMU, Kalamazoo College, Kettering, SVSU,
-Detroit Mercy, UM Dearborn) and show a navy chip with their initials instead.
-Drop a square PNG into `assets/campus/` named for the slug and add the slug to
-`MARKS` in `app.js` to promote one. University marks are their institutions'
-trademarks; their use here was a deliberate decision by the program.
+Campus marks live in `assets/campus/`, normalized to 96x96, one for every
+campus. Twenty two came straight from each institution's own site. The other
+seven took a second pass: Kalamazoo College's K, the SVSU cardinal and the
+Detroit Mercy shield were cut from the institution's own header lockups, and
+EMU's block E, the Aquinas seal, the Kettering seal and the UM Dearborn
+vertical lockup came from the vector or raster files their Wikipedia articles
+carry. A campus missing from `MARKS` in `app.js` would fall back to a navy
+chip with its initials; none does today. University marks are their
+institutions' trademarks; their use here was a deliberate decision by the
+program.
 
 ## Where the answers come from
 
@@ -47,10 +50,10 @@ Coverage as built: 29 campuses, 736 buildings, 151 precincts (the 149 student
 housing precincts plus two that the building corrections below needed), and a
 named, geocoded polling place for 736 of 736 buildings.
 
-## Ten buildings the turf record had in the wrong place
+## Eleven buildings the turf record had in the wrong place
 
 Reading the early voting sheet against the turf record exposed five rows whose
-precinct id and precinct name disagreed. Chasing them found ten buildings whose
+precinct id and precinct name disagreed. Chasing them found eleven buildings whose
 turf geocode had landed miles from the building, consistently enough that the
 point in polygon check could not catch it (a wrong pin inside the wrong precinct
 still agrees with itself):
@@ -61,6 +64,7 @@ still agrees with itself):
 | Great Oaks Apartments (OU) | Ortonville, 22 miles north | 940 Oakwood Dr, City of Rochester, Precinct 1 |
 | Meadowbrooke Apartment Homes (Davenport) | Grand Rapids Charter Township | Cascade Charter Township, Precinct 5 (street misspelled) |
 | Seven Aquinas halls with no street address | East Grand Rapids | Aquinas College campus, Grand Rapids Ward 2, Precinct 21 |
+| Cass D Apartments (WSU) | Trenton, 20 miles downriver | 504 E Kirby St, Midtown Detroit, Precinct 136 |
 
 Each correction was triangulated three ways before it was written: a rooftop
 geocode of the real address, that point dropped into the State of Michigan 2026
@@ -118,19 +122,21 @@ Rules the build enforces, and the page and tests re-enforce:
   carries all of these hand read, and wins over the parser
 - `build/ev_extra.json` fills jurisdictions the sheet has no row for from the
   clerk's own published notice, each entry citing it (Houghton County's
-  countywide HoCo Arena site, from the City of Hancock election page)
+  countywide HoCo Arena site from the City of Hancock election page; the
+  Grand Traverse County east regional site for Peninsula Township from the
+  county clerk's notice)
 - the page will not render a site without a `confirmed` date, and sorts
   on campus sites (`campus: true`) first
 
-Coverage as built: 145 of the 147 precincts that carry a building, 734 of 736
-buildings, 0 held. Still open: Peninsula Township (one NWMC building; the
-township shares an East Bay Township site with four neighbours but has posted
-only the August arrangement) and the City of Trenton (one WSU building; the
-city site blocks automated reading). One row worth a phone call: the sheet's
-City of Houghton row names First Apostolic Lutheran Church, while the City of
-Hancock notice and two newspapers describe HoCo Arena in Hancock as the single
-countywide site for November. The sheet row ships, as the program's own
-confirmation, flagged in `build/ev_clerk_followup.csv`.
+Coverage as built: every one of the 146 precincts that carries a building,
+736 of 736 buildings, 0 held. One row worth a phone call: the sheet's City of
+Houghton row names First Apostolic Lutheran Church, while the City of Hancock
+notice, the City of Houghton clerk page and the Mining Gazette all describe
+HoCo Arena in Hancock as the single countywide site for November. The page
+shows HoCo Arena (an override that carries its own source line) until the
+Houghton clerk settles it; `build/ev_clerk_followup.csv` has the note. MVIC's
+own address lookup showed no early voting information yet for Houghton or
+Peninsula Township on 2026-09-18, so the state is not ahead of us here.
 
 `build/ev_tab.json` is the sheet extract with the working notes column
 removed. Refresh it from the sheet, rerun the build, rerun the tests.
@@ -138,7 +144,7 @@ removed. Refresh it from the sheet, rerun the build, rerun the tests.
 ## Rebuilding the data
 
     npm run data     # build, fill municipalities, apply building fixes, validate, early voting
-    npm test         # 119 checks, no network needed
+    npm test         # 120 checks, no network needed
 
 `build/build_data.py` joins the upstream file to the turf tracker.
 `build/fill_city.py` reverse geocodes the buildings whose municipality the turf
@@ -198,4 +204,4 @@ for this audience.
     data/guide.json                   student voting guide copy and the four dates
     data/early-voting.json            clerk confirmed early voting sites by precinct
     build/                            the data pipeline, the early voting build and caches
-    tests/smoke.mjs                   119 checks including house style and privacy
+    tests/smoke.mjs                   120 checks including house style and privacy

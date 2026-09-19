@@ -184,7 +184,8 @@ def display_name(code):
 canon, held_j, skipped = {}, {}, []
 for key, o in OVERRIDES.items():
     if key.startswith('_'): continue
-    canon[jname(key)] = {"sites": o['sites'], "satellite": o.get('satellite'), "rows": len(by_j.get(jname(key), [])), "how": "hand read"}
+    canon[jname(key)] = {"sites": o['sites'], "satellite": o.get('satellite'), "rows": len(by_j.get(jname(key), [])), "how": "hand read",
+                         "by": o.get('by'), "confirmed": o.get('confirmed', "2026-09-18")}
 for j, rs in by_j.items():
     if j in canon: continue
     usable = [r for r in rs if re.search(r'\d', r['ev_addr'] or '')]
@@ -234,7 +235,7 @@ for code in prec:
         out['_no_row_in_sheet']['precincts'][code] = prec[code]['name']; continue
     mine = own.get(code, [])
     entry = {"sites": c['sites'], "satellite": c['satellite'], "confirmed": c.get('confirmed', "2026-09-18")}
-    if c['how'] == 'clerk notice':
+    if c['how'] == 'clerk notice' or c.get('by'):
         entry['by'] = c['by']
     elif mine:
         entry['by'] = "clerk, per crosswalk sheet" + (", hand read" if c['how'] == 'hand read' else "")

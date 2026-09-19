@@ -3,7 +3,7 @@
   "Corrections to buildings whose turf record geocoded to the wrong place, each triangulated three ways before it",
   "was written: a rooftop geocode of the real address, the point dropped into the State of Michigan 2026 precinct",
   "layer, and the precinct the crosswalk sheet itself names for that building. build/apply_fixes.py applies them",
-  "to data/dorms.json after build_data.py, and adds the two precincts the 149 did not carry (polygons from the",
+  "state layer, polling places from the VAN polling location table, which matches the crosswalk sheet's Election",
   "state layer, polling places from the VAN polling location table, which matches the crosswalk sheet's Election",
   "Day column). Every fix here is also a defect in the Master Turf Tracker; fix it there and delete the entry."
  ],
@@ -224,6 +224,28 @@
    },
    "why": "same as Woodcock Hall",
    "evidence": "same as Woodcock Hall"
+  },
+  {
+   "i": 735,
+   "n": "Cass D Apartments",
+   "school": "WSU",
+   "set": {
+    "a": "504 E Kirby St",
+    "c": "Detroit",
+    "z": "48202",
+    "lat": 42.362313,
+    "lng": -83.060596,
+    "p": "1632200005136"
+   },
+   "was": {
+    "a": "504 E Kirby",
+    "c": "Trenton",
+    "lat": 42.16824,
+    "lng": -83.1752,
+    "p": "1638042000001"
+   },
+   "why": "the turf address has no city, and the geocoder chose Trenton, 20 miles downriver, where no E Kirby exists (crosswalk flag on turf 04-7124); E Kirby St runs through Midtown beside the Wayne State campus",
+   "evidence": "US Census rooftop match on 504 E Kirby St, Detroit 48202; state 2026 precinct layer puts it in City of Detroit, Precinct 136"
   }
  ],
  "precincts": {
@@ -248,6 +270,18 @@
     "city": "Grand Rapids",
     "lat": 42.904749,
     "lng": -85.508333
+   },
+   "source": "VAN polling location table (mi_van.pollinglocations)"
+  },
+  "1632200005136": {
+   "name": "City of Detroit, Precinct 136",
+   "county": "Wayne",
+   "poll": {
+    "name": "BETHEL AME CH HALL",
+    "addr": "5050 Saint Antoine St",
+    "city": "Detroit",
+    "lat": 42.360629,
+    "lng": -83.056912
    },
    "source": "VAN polling location table (mi_van.pollinglocations)"
   }

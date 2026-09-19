@@ -1,5 +1,5 @@
 {
- "_readme": "Hand read from the clerk confirmed cells for cities whose sheet rows hold several sites in one cell, whose hours were typed day by day, or whose address cell was dragged down in the sheet so the street number auto incremented (Allendale 6676 to 6679, Auburn Hills 1899 to 1901; the first row is the real one, verified on the Ottawa County and City of Auburn Hills sites). Keyed by jurisdiction as the precinct name spells it. Edit here, rebuild, done.",
+ "_readme": "Hand read from the clerk confirmed cells for cities whose sheet rows hold several sites in one cell, whose hours were typed day by day, or whose address cell was dragged down in the sheet so the street number auto incremented (Allendale 6676 to 6679, Auburn Hills 1899 to 1901; the first row is the real one, verified on the Ottawa County and City of Auburn Hills sites). Keyed by jurisdiction as the precinct name spells it. Edit here, rebuild, done. An entry may carry its own by (and confirmed) when the source is not the sheet.",
  "City of Ann Arbor": {
   "sites": [
    {
@@ -416,5 +416,17 @@
    }
   ],
   "satellite": null
+ },
+ "City of Houghton": {
+  "sites": [
+   {
+    "name": "HoCo Arena",
+    "addr": "1500 Birch St, Hancock, MI 49930",
+    "hours": "8 am to 4 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null,
+  "by": "Houghton County countywide site for the August and November 2026 elections, per the City of Hancock election notice (cityofhancock.com), the City of Houghton clerk page (one county site, 8 am to 4 pm) and the Mining Gazette, July 2026. The crosswalk sheet's Houghton row names First Apostolic Lutheran Church, 19741 W Sharon Ave, which no official source carries; re-confirm with the Houghton clerk, then delete this note."
  }
 }

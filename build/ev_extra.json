@@ -29,5 +29,18 @@
   "satellite": null,
   "confirmed": "2026-09-18",
   "by": "City of Hancock election notice (cityofhancock.com/info-election.php): countywide Houghton County early voting site for the August and November 2026 elections"
+ },
+ "Peninsula Township": {
+  "sites": [
+   {
+    "name": "East Bay Charter Township Hall (east regional site)",
+    "addr": "1965 N Three Mile Rd, Traverse City, MI 49696",
+    "hours": "8 am to 4 pm",
+    "dates": "October 24 to November 1"
+   }
+  ],
+  "satellite": null,
+  "confirmed": "2026-09-18",
+  "by": "Grand Traverse County Clerk early voting notice for the 2026 general election (gtcountymi.gov/2692/Early-Voting): east regional site for voters of East Bay, Acme, Peninsula, Union and Whitewater townships"
  }
 }

@@ -41,14 +41,15 @@ const CONFIG = {
   statusUrl:   'https://mvic.sos.state.mi.us/Voter/Index',
 };
 
-/* Campuses whose institution publishes a usable mark. The other seven block
-   automated fetching or serve only a 16 pixel icon, and get a typographic chip
-   instead, which looks deliberate rather than broken. Drop a 96x96 PNG into
-   assets/campus/ named for the slug and add it here to promote one. */
+/* Every campus carries its institution's own mark, normalized to 96x96 in
+   assets/campus/. A campus missing from this set would fall back to a
+   typographic chip, which looks deliberate rather than broken; none does today.
+   Drop a square PNG into assets/campus/ named for the slug and add it here. */
 const MARKS = new Set([
-  'albion','alma','andrews','cmu','davenport','fsu','gvsu','hope','jackson',
-  'lawrence-tech','lmc','michigan-tech','msu','nmu','northwood','nwmc','ou',
-  'schoolcraft','uofm-aa','uofm-flint','wmu','wsu',
+  'albion','alma','andrews','aquinas','cmu','davenport','emu','fsu','gvsu','hope',
+  'jackson','kc','kettering','lawrence-tech','lmc','michigan-tech','msu','nmu',
+  'northwood','nwmc','ou','schoolcraft','svsu','udm','uofm-aa','uofm-dearborn',
+  'uofm-flint','wmu','wsu',
 ]);
 const slug = k => String(k).toLowerCase().replace(/\s+/g, '-');
 const markUrl = k => (MARKS.has(slug(k)) ? 'assets/campus/' + slug(k) + '.png' : null);

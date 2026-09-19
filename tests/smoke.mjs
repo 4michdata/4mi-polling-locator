@@ -32,6 +32,8 @@ const greatOaks = data.dorms.find(x => /^Great Oaks Apartments/.test(x.n));
 ok('Great Oaks Apartments sits in the City of Rochester, not Ortonville', greatOaks && greatOaks.p === '1256902000001' && /MUNICIPAL/.test(data.precincts[greatOaks.p].poll.name));
 const meadow = data.dorms.find(x => /^Meadowbrooke/.test(x.n));
 ok('Meadowbrooke sits in Cascade Charter Township', meadow && meadow.p === '0811366000005' && /Verdure/.test(meadow.a));
+const cassD = data.dorms.find(x => /^Cass D Apartments/.test(x.n));
+ok('Cass D Apartments sits in Midtown Detroit, not Trenton', cassD && cassD.c === 'Detroit' && cassD.p === '1632200005136' && cassD.fix === 1);
 ok('the seven Aquinas halls without addresses are pinned to the campus in Grand Rapids Ward 2 Precinct 21',
    data.dorms.filter(x => x.s === 'Aquinas' && x.fix).length === 7 && data.dorms.filter(x => x.s === 'Aquinas').every(x => x.p === '0813400002021'));
 
@@ -159,8 +161,8 @@ ok('all 29 campuses listed', sOpts.length === 29, sOpts.length + ' listed');
 
 const withMark = d.querySelectorAll('#comboSchool .combo-list .opt img.mark').length;
 const withInit = d.querySelectorAll('#comboSchool .combo-list .opt .initials').length;
-ok('22 campuses show a real mark', withMark === 22, withMark + ' marks');
-ok('the other 7 fall back to a typographic chip', withInit === 7, withInit + ' chips');
+ok('all 29 campuses show a real mark', withMark === 29, withMark + ' marks');
+ok('no campus falls back to the typographic chip', withInit === 0, withInit + ' chips');
 ok('every campus row has one or the other', withMark + withInit === 29);
 
 const ss = d.querySelector('#comboSchool .combo-search');
